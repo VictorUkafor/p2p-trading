@@ -60,5 +60,8 @@ class Kernel extends HttpKernel
         // middleware to validate email
         'validateEmail' => \App\Http\Middleware\ValidateEmail::class,
 
+        // middleware to validate signup complete
+        'validateSignup' => \App\Http\Middleware\ValidateSignup::class,
+
     ];
 }
