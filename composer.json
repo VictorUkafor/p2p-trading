@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "victorukafor/p2p-trading",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
@@ -36,7 +36,9 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "php artisan optimize",
+            "php artisan key:generate",
+            "php artisan migrate"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",

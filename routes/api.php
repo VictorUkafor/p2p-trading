@@ -15,5 +15,12 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
-    Route::get('/', 'UserController@index');
+    // routes that don't need authentication
+    Route::prefix('auth')->group(function () {
+        
+        // sign up account
+        Route::post('/register', 'UserController@signup')
+        ->middleware('validateEmail'); 
+
+    });
 });
