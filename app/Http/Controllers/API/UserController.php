@@ -32,5 +32,40 @@ class UserController extends Controller {
 
         }
     }
+
+
+    public function login(Request $request){
+
+        $user = User::where('email', $request->email)->first();
+
+        $credentials = [
+            'email' => $request->email, 
+            'password' => $request->password, 
+            'active' => 1
+        ];
+        
+        $token = JWTAuth::attempt($credentials);
+    
+        try {
+    
+            if (!$user || !$token) {
+                return response()->json([
+                    'errorMessage' => 'Invalid email or password'
+                ], 401);
+            } 
+            
+    
+        } catch (JWTException $e) {
+    
+            return response()->json([
+                'errorMessage' => 'Internal server error'
+            ], 500);
+        }
+    
+        return response()->json([
+            'token' => $token
+        ], 201);
+    
+    }
     
 }
