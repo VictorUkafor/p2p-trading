@@ -26,5 +26,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::post('/account-activation/{token}', 'UserController@signupComplete')
         ->middleware('validateSignup'); 
 
+        // login
+        Route::post('/login', 'UserController@login')
+        ->middleware('validateLogin'); 
+
     });
 });
