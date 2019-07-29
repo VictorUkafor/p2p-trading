@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +27,22 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         // login
         Route::post('/login', 'UserController@login')
         ->middleware('validateLogin'); 
+
+        // Password resets routes
+        Route::prefix('password-reset')->group(function () {
+            
+            // request password reset route
+            Route::post('/request', 'PasswordResetController@create')
+           ->middleware('emailExist');
+        
+            // get token for reset
+            Route::get('/find/{token}', 'PasswordResetController@find');    
+        
+            // reset password route
+            Route::post('/reset/{token}', 'PasswordResetController@reset')
+            ->middleware('validatePasswords');
+
+        });
 
     });
 });
