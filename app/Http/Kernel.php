@@ -69,6 +69,9 @@ class Kernel extends HttpKernel
         // middleware to validate password reset
         'validatePasswords' => \App\Http\Middleware\ValidatePasswords::class,
 
+        // middleware to validate date
+        'validateDate' => \App\Http\Middleware\ValidateDate::class,
+
         // middleware to validate login
         'validateLogin' => \App\Http\Middleware\ValidateLogin::class,
 

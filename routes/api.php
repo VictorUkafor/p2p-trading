@@ -55,7 +55,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
             Route::prefix('profile')->group(function () {
                 
+                // view profile
                 Route::get('/', 'UserController@profile');   
+
+                // update profile
+                Route::put('/', 'UserController@update')
+                ->middleware('validateDate');   
 
             });
 
