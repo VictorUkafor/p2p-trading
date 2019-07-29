@@ -102,5 +102,24 @@ class UserController extends Controller {
         ], 201);
     
     }
+
+
+    public function profile(){
+
+        $user = auth()->user();
+        
+        if(!$user){
+            return response()->json([
+                'errorMessage' => 'User can not be found'
+            ], 404);
+        }
+
+        return response()->json([
+            'user' => $user
+        ], 200);
+
+    }
+
+
     
 }
