@@ -45,4 +45,27 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
     });
+
+
+    // routes requring authentication
+    Route::middleware('jwt.auth')->group(function () {
+
+        // account routes
+        Route::prefix('account')->group(function () {
+
+            Route::prefix('profile')->group(function () {
+                
+                // view profile
+                Route::get('/', 'UserController@profile');   
+
+                // update profile
+                Route::put('/', 'UserController@update')
+                ->middleware('validateDate');   
+
+            });
+
+        });
+
+    });
+
 });

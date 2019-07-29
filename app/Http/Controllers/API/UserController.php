@@ -102,5 +102,51 @@ class UserController extends Controller {
         ], 201);
     
     }
+
+
+    public function profile(){
+
+        $user = auth()->user();
+        
+        if(!$user){
+            return response()->json([
+                'errorMessage' => 'User can not be found'
+            ], 404);
+        }
+
+        return response()->json([
+            'user' => $user
+        ], 200);
+
+    }
+
+
+    public function update(Request $request){
+
+        $user = auth()->user();
+
+        $user->first_name = $request->first_name ? 
+        $request->first_name : $user->first_name;
+
+        $user->last_name = $request->last_name ? 
+        $request->last_name : $user->last_name;
+
+        $user->date_of_birth = $request->date_of_birth ? 
+        $request->date_of_birth : $user->date_of_birth;
+
+        if($user->save()){
+            return response()->json([
+                'successMessage' => 'Profile updated successfully',
+                'user' => $user
+            ], 201);
+        }
+
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500);
+
+    }
+
+
     
 }
