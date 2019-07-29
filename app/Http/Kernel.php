@@ -60,8 +60,14 @@ class Kernel extends HttpKernel
         // middleware to validate email
         'validateEmail' => \App\Http\Middleware\ValidateEmail::class,
 
+        // middleware to check if email exist
+        'emailExist' => \App\Http\Middleware\EmailExist::class,
+
         // middleware to validate signup complete
         'validateSignup' => \App\Http\Middleware\ValidateSignup::class,
+
+        // middleware to validate password reset
+        'validatePasswords' => \App\Http\Middleware\ValidatePasswords::class,
 
         // middleware to validate login
         'validateLogin' => \App\Http\Middleware\ValidateLogin::class,
