@@ -80,6 +80,27 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::post('/verify-otp', 'AccountController@OTPVerification')
             ->middleware('validateOTP'); 
 
+            
+            // routes for bank accounts
+            Route::prefix('bank-accounts')->group(function () {
+                
+                // route for adding bank account
+                Route::post('/', 'AccountController@addAccount')
+                ->middleware('validateAccount'); 
+
+                // route for updating bank account
+                Route::put('/{accountId}', 'AccountController@updateAccount')
+                ->middleware(['findAccount', 'validateAccount']); 
+
+                // route for viewing all bank accounts
+                Route::get('/', 'AccountController@accounts'); 
+
+                // route for viewing a single bank accounts
+                Route::get('/{accountId}', 'AccountController@account')
+                ->middleware('findAccount');  
+
+            });
+
         });
 
 

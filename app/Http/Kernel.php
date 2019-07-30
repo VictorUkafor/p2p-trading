@@ -87,6 +87,13 @@ class Kernel extends HttpKernel
         // for passing the auth user
         'authUser' => \App\Http\Middleware\AuthUser::class,
 
+        // for validating add account
+        'validateAccount' => \App\Http\Middleware\ValidateBankAccount::class,
+
+        // for checking if an account exist
+        // and belongs to the user
+        'findAccount' => \App\Http\Middleware\findAccount::class,
+
         // jwt authentication
         'jwt.auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
