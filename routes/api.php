@@ -67,7 +67,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             
             // route for verifing BVN number
             Route::post('/bvn-verification', 'AccountController@bvnVerification')
+            ->middleware('validateBVN'); 
+            
+            // route for updating BVN
+            Route::put('/bvn-update', 'AccountController@bvnUpdate')
             ->middleware('validateBVN');  
+
 
         });
 
