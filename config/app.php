@@ -180,6 +180,9 @@ return [
         // JWT token
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
+        // Ebulksms
+        therealsmat\Ebulksms\EbulkSmsServiceProvider::class,
+
     ],
 
     /*

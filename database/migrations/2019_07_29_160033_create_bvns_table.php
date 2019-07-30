@@ -21,7 +21,8 @@ class CreateBvnsTable extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->boolean('internet_banking')->default(false);
+            $table->boolean('verified')->default(false);
+            $table->integer('otp_code')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
