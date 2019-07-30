@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Model\Bvn;
+use App\Model\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use therealsmat\Ebulksms\EbulkSMS;
@@ -152,6 +153,92 @@ class AccountController extends Controller
         ]   , 400); 
 
     }
+
+
+    public function addAccount(Request $request){
+
+        $account = $request->user->bankAccounts()
+        ->where('account_number', $request->account_number)
+        ->first();
+
+        if($account){
+            return response()->json([
+                'errorMessage' => 'Unauthorized action',
+            ]   , 401); 
+        }
+
+        $account = new BankAccount;
+        $account->user_id = $request->user->id;
+        $account->account_name = $request->account_name;
+        $account->account_number = $request->account_number;
+        $account->bank = $request->bank;
+        $account->internet_banking = $request->internet_banking;
+
+        if($account->save()){
+            return response()->json([
+                'successMessage' => 'Your account has added successfully',
+                'account' => $account
+            ]   , 201);
+        }
+        
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ]   , 500); 
+
+    }
+
+
+    public function updateAccount(Request $request){
+
+        $account = $request->account;
+
+        $account->internet_banking = $request->internet_banking;
+
+        if($account->save()){
+            return response()->json([
+                'successMessage' => 'Your account has been updated successfully',
+                'account' => $account
+            ]   , 201);
+        }
+        
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ]   , 500); 
+
+    }
+
+
+    public function accounts(Request $request){
+
+        $accounts = $request->user->bankAccounts;
+
+        if(!count($accounts)){
+            return response()->json([
+                'errorMessage' => 'Accounts can not be found',
+            ], 404);
+        }
+
+        if(count($accounts)){
+            return response()->json([
+                'accounts' => $accounts,
+            ], 200);
+        }
+        
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
+
+    }
+
+
+    public function account(Request $request){
+
+         return response()->json([
+            'account' => $request->account,
+        ], 200);        
+
+    }
+
 
 
 }

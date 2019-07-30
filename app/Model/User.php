@@ -77,5 +77,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Model\Mail');
     }  
 
+
+    /**
+     * Get the bank accounts of a user.
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany('App\Model\BankAccount');
+    } 
+
 }
 
