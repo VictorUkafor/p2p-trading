@@ -75,6 +75,12 @@ class Kernel extends HttpKernel
         // middleware to validate login
         'validateLogin' => \App\Http\Middleware\ValidateLogin::class,
 
+        // middleware to validate bvn
+        'validateBVN' => \App\Http\Middleware\ValidateBVN::class,
+
+        // for passing the auth user
+        'authUser' => \App\Http\Middleware\AuthUser::class,
+
         // jwt authentication
         'jwt.auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => Tymon\JWTAuth\Http\Middleware\RefreshToken::class,

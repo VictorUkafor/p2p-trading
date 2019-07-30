@@ -104,9 +104,9 @@ class UserController extends Controller {
     }
 
 
-    public function profile(){
+    public function profile(Request $request){
 
-        $user = auth()->user();
+        $user = $request->user;
         
         if(!$user){
             return response()->json([
@@ -123,7 +123,7 @@ class UserController extends Controller {
 
     public function update(Request $request){
 
-        $user = auth()->user();
+        $user = $request->user;
 
         $user->first_name = $request->first_name ? 
         $request->first_name : $user->first_name;

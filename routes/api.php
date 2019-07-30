@@ -48,7 +48,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
 
     // routes requring authentication
-    Route::middleware('jwt.auth')->group(function () {
+    Route::middleware(['jwt.auth', 'authUser'])->group(function () {
 
         // account routes
         Route::prefix('account')->group(function () {
@@ -63,6 +63,16 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
                 ->middleware('validateDate');   
 
             });
+
+            
+            // route for verifing BVN number
+            Route::post('/bvn-verification', 'AccountController@bvnVerification')
+            ->middleware('validateBVN'); 
+            
+            // route for updating BVN
+            Route::put('/bvn-update', 'AccountController@bvnUpdate')
+            ->middleware('validateBVN');  
+
 
         });
 

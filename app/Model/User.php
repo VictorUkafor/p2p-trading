@@ -58,5 +58,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+
+    /**
+     * Get the BVN details of a user.
+     */
+    public function bvn()
+    {
+        return $this->hasOne('App\Model\Bvn');
+    }    
+
 }
 
