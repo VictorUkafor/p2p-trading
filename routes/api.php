@@ -80,8 +80,13 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::post('/verify-otp', 'AccountController@OTPVerification')
             ->middleware('validateOTP'); 
 
-
         });
+
+
+        // route for mailing p2p trading
+        Route::post('/mail-us', 'MailController@create')
+        ->middleware('validateMail'); 
+        
 
     });
 
