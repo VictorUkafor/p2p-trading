@@ -66,15 +66,27 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
             
             // route for verifing BVN number
-            Route::post('/bvn-verification', 'AccountController@bvnVerification')
+            Route::post('/bvn', 'AccountController@bvn')
             ->middleware('validateBVN'); 
             
             // route for updating BVN
             Route::put('/bvn-update', 'AccountController@bvnUpdate')
-            ->middleware('validateBVN');  
+            ->middleware('validateBVN'); 
+            
+            // route for sending OTP
+            Route::get('/send-otp', 'AccountController@sendOTP'); 
 
+            // route for verifing OTP
+            Route::post('/verify-otp', 'AccountController@OTPVerification')
+            ->middleware('validateOTP'); 
 
         });
+
+
+        // route for mailing p2p trading
+        Route::post('/mail-us', 'MailController@create')
+        ->middleware('validateMail'); 
+        
 
     });
 

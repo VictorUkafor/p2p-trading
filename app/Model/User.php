@@ -68,5 +68,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne('App\Model\Bvn');
     }    
 
+
+    /**
+     * Get the mails of a user.
+     */
+    public function mails()
+    {
+        return $this->hasMany('App\Model\Mail');
+    }  
+
 }
 

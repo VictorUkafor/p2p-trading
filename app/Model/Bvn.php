@@ -17,7 +17,15 @@ class Bvn extends Model
         'middle_name',
         'last_name',
         'phone',
+        'verified',
+        'otp_code'
     ];
+
+
+    protected $hidden = [
+        'otp_code',
+    ];
+
 
     /**
      * Get the user of the bvn.

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBvnsTable extends Migration
+class CreateMailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,20 @@ class CreateBvnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bvns', function (Blueprint $table) {
+        Schema::create('mails', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('bvn_number');
-            $table->string('phone');
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
-            $table->boolean('verified')->default(false);
-            $table->integer('otp_code')->nullable();
-            $table->timestamps();
+            $table->string('name');
+            $table->string('email');
+            $table->string('subject');
+            $table->text('message');
+            $table->string('file')->nullable();
             $table->softDeletes();
+            $table->timestamps();
         });
 
-        Schema::table('bvns', function($table) {
+
+        Schema::table('mails', function($table) {
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
           });
@@ -40,6 +39,6 @@ class CreateBvnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bvns');
+        Schema::dropIfExists('mails');
     }
 }

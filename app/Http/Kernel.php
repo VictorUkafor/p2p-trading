@@ -78,6 +78,12 @@ class Kernel extends HttpKernel
         // middleware to validate bvn
         'validateBVN' => \App\Http\Middleware\ValidateBVN::class,
 
+        // middleware to validate otp code
+        'validateOTP' => \App\Http\Middleware\ValidateOTP::class,
+
+        // middleware to validate mail us
+        'validateMail' => \App\Http\Middleware\ValidateMailUs::class,
+
         // for passing the auth user
         'authUser' => \App\Http\Middleware\AuthUser::class,
 
