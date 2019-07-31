@@ -84,7 +84,16 @@ class User extends Authenticatable implements JWTSubject
     public function bankAccounts()
     {
         return $this->hasMany('App\Model\BankAccount');
-    } 
+    }
+    
+    
+    /**
+     * Get the BVN notifications of a user.
+     */
+    public function notifications()
+    {
+        return $this->hasOne('App\Model\Notification');
+    }  
 
 }
 

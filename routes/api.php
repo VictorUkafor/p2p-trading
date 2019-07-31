@@ -101,6 +101,24 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
             });
 
+    
+            // routes for notifications
+            Route::prefix('notifications')->group(function () {
+                
+                // route for viewing notifications
+                Route::get('/', 'NotificationController@notifications');
+
+                // route for setting push notification
+                Route::post('/push', 'NotificationController@pushNotification');
+
+                // route for setting email notification
+                Route::post('/email', 'NotificationController@emailNotification');
+
+                // route for setting auto-logout
+                Route::post('/auto-logout', 'NotificationController@autoLogout');
+
+            });
+
         });
 
 
