@@ -16,4 +16,14 @@ class BankAccount extends Model
         'bank',
         'internet_banking',
     ];
+
+
+    /**
+     * Get the transactions of a bank account.
+     */
+    public function transactions()
+    {
+        return $this->hasMany('App\Model\Transaction', 'bank_account_id');
+    }
+
 }

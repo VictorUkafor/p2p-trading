@@ -122,6 +122,31 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
 
+        // routes for wallet
+        Route::prefix('wallet')->group(function () {
+
+            // get wallet 
+            Route::get('/', 'WalletController@wallet');
+
+           // routes for buy crypto
+           Route::prefix('buy-cryptos')->group(function () {
+
+                // buy crypto
+                Route::post('/', 'WalletController@buyCrypto')
+                ->middleware('validateBuy');
+            
+                // view all buys
+                Route::get('/', 'WalletController@buys');
+
+                // view a single buy
+                Route::get('/{buyId}', 'WalletController@buy')
+                ->middleware('findBuy');
+
+           });
+
+        });
+
+
         // route for mailing p2p trading
         Route::post('/mail-us', 'MailController@create')
         ->middleware('validateMail'); 
