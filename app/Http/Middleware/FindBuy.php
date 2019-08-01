@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Model\BuyCrypto;
 
 class FindBuy
 {
@@ -16,9 +17,14 @@ class FindBuy
     public function handle($request, Closure $next)
     {
         $id = $request->route('buyId');
+        $adminEmail = config('p2p.admin_email');
 
         $buyCrypto = $request->user->buyCryptos()
         ->where('id', $id)->first();
+
+        if($request->user->email === $adminEmail){
+            $buyCrypto = BuyCrypto::find($id);   
+        }
 
         if(!$buyCrypto){
             return response()->json([

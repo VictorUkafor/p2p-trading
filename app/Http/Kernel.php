@@ -99,6 +99,9 @@ class Kernel extends HttpKernel
         // for checking if a buy transaction exist
         'findBuy' => \App\Http\Middleware\FindBuy::class,
 
+        // check for admin user
+        'admin' => \App\Http\Middleware\FindAdmin::class,
+
         // jwt authentication
         'jwt.auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'jwt.refresh' => Tymon\JWTAuth\Http\Middleware\RefreshToken::class,

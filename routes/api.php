@@ -15,6 +15,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
     // routes that don't require authentication
     Route::prefix('auth')->group(function () {
+
+        // admin signup
+        Route::post('/admin', 'AdminController@signup'); 
         
         // sign up account
         Route::post('/register', 'UserController@signup')
@@ -49,6 +52,19 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
     // routes requring authentication
     Route::middleware(['jwt.auth', 'authUser'])->group(function () {
+
+
+        // admin routes
+        Route::group([
+            'prefix' => 'admin', 
+            'middleware' => 'admin'
+        ], function () {
+
+            // view admin profile
+            Route::get('/profile', 'AdminController@profile');   
+
+        });
+
 
         // account routes
         Route::prefix('account')->group(function () {
@@ -132,15 +148,35 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
            Route::prefix('buy-cryptos')->group(function () {
 
                 // buy crypto
-                Route::post('/', 'WalletController@buyCrypto')
+                Route::post('/', 'BuyCryptoController@buyCrypto')
                 ->middleware('validateBuy');
             
-                // view all buys
-                Route::get('/', 'WalletController@buys');
+                // view all buying transaction
+                Route::get('/', 'BuyCryptoController@buys');
 
-                // view a single buy
-                Route::get('/{buyId}', 'WalletController@buy')
+                // view a single buying transaction
+                Route::get('/{buyId}', 'BuyCryptoController@buy')
                 ->middleware('findBuy');
+
+                // routes for admin
+                Route::middleware('admin')->group(function () {                
+                    
+                    // complete a buying transaction
+                    Route::get('/all/buys', 'BuyCryptoController@allBuys');
+
+                    // cancel a buying transaction
+                    Route::post('/{buyId}/cancel', 'BuyCryptoController@cancel')
+                    ->middleware('findBuy');
+
+                    // complete a buying transaction
+                    Route::post('/{buyId}/complete', 'BuyCryptoController@complete')
+                    ->middleware('findBuy');
+
+                });
+
+
+
+            
 
            });
 
