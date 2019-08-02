@@ -18,7 +18,7 @@ class ValidateBuy
     {
         $validator = Validator::make($request->all(), [
             'cryptocurrency' => 'required|in:BTC,LTC,ETH',
-            'amount_in_naira' => 'required',
+            'amount_in_naira' => 'required|numeric',
             'payment_method' => 'required|in:bank,card',
             'method_details' => 'required',
         ]);

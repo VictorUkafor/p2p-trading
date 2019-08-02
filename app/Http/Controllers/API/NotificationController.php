@@ -26,7 +26,7 @@ class NotificationController extends Controller
     }
 
 
-    public function pushNotification(Request $request){
+    public function push(Request $request){
 
         $notification = $request->user->notifications;
 
@@ -55,7 +55,7 @@ class NotificationController extends Controller
     }
 
 
-    public function emailNotification(Request $request){
+    public function email(Request $request){
 
         $notification = $request->user->notifications;
 

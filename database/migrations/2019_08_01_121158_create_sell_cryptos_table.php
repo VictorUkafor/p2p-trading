@@ -15,7 +15,20 @@ class CreateSellCryptosTable extends Migration
     {
         Schema::create('sell_cryptos', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->string('cryptocurrency');
+            $table->integer('bank_account_id');
+            $table->integer('commission_id');
+            $table->string('amount');
+            $table->string('value');
+            $table->string('status')->default('pending');
             $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::table('sell_cryptos', function($table) {
+            $table->foreign('user_id')->references('id')
+            ->on('users')->onDelete('cascade');
         });
     }
 

@@ -93,11 +93,17 @@ class Kernel extends HttpKernel
         // for validating buy crypto
         'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
 
+        // for validating sell crypto
+        'validateSell' => \App\Http\Middleware\ValidateSell::class,
+
         // for checking if an account exist
         'findAccount' => \App\Http\Middleware\FindAccount::class,
 
         // for checking if a buy transaction exist
         'findBuy' => \App\Http\Middleware\FindBuy::class,
+
+        // for checking if a sale transaction exist
+        'findSale' => \App\Http\Middleware\FindSale::class,
 
         // check for admin user
         'admin' => \App\Http\Middleware\FindAdmin::class,

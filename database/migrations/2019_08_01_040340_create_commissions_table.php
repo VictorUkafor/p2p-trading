@@ -16,8 +16,6 @@ class CreateCommissionsTable extends Migration
         Schema::create('commissions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->integer('buy_crypto_id')->nullable();
-            $table->integer('transfer_id')->nullable();
             $table->string('amount');
             $table->string('value');
             $table->string('status')->default('pending');

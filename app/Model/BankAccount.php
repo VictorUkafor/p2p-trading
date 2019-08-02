@@ -19,11 +19,11 @@ class BankAccount extends Model
 
 
     /**
-     * Get the transactions of a bank account.
+     * Get the sellCrypto of a bank account.
      */
-    public function transactions()
+    public function sellCryptos()
     {
-        return $this->hasMany('App\Model\Transaction', 'bank_account_id');
+        return $this->belongsToMany('App\Model\SellCrypto', 'bank_account_id');
     }
 
 }

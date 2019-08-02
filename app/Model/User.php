@@ -105,6 +105,15 @@ class User extends Authenticatable implements JWTSubject
 
 
     /**
+     * Get the buyCryptos of a user.
+     */
+    public function sellCryptos()
+    {
+        return $this->hasMany('App\Model\SellCrypto');
+    }
+
+
+    /**
      * Get the transfers of a user.
      */
     public function transfers()

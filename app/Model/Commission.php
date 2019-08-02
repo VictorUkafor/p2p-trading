@@ -11,19 +11,17 @@ class Commission extends Model
     
     protected $fillable = [
         'user_id',
-        'description',
-        'buy_crypto_id',
-        'transfer_id',
         'amount',
         'value',
     ];
 
+
     /**
-     * Get the buyCrypto of a commission.
+     * Get the sellCrypto of a commission.
      */
-    public function buyCrypto()
+    public function sellCrypto()
     {
-        return $this->hasOne('App\Model\BuyCrypto', 'buy_crypto_id');
+        return $this->belongsTo('App\Model\sellCrypto', 'commission_id');
     } 
 
     /**
@@ -31,7 +29,8 @@ class Commission extends Model
      */
     public function transfer()
     {
-        return $this->hasOne('App\Model\Transfer', 'transfer_id');
+        return $this->belongsTo('App\Model\Transfer', 'commission_id');
     } 
+
 
 }

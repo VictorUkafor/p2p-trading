@@ -15,6 +15,7 @@ class Transfer extends Model
         'receiver_username',
         'description',
         'cryptocurrency',
+        'commission_id',
         'amount',
         'status'
     ];

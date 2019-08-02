@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Validator;
 
-class ValidateBankAccount
+class ValidateSell
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,9 @@ class ValidateBankAccount
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'account_number' => 'required|numeric|digits:10',
-            'account_name' => 'required',
-            'bank' => 'required',
-            'internet_banking' => 'required'
+            'cryptocurrency' => 'required|in:BTC,LTC,ETH',
+            'bank_account_id' => 'required|numeric',
+            'crypto_amount' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -28,7 +27,17 @@ class ValidateBankAccount
             return response()->json([
                 'errors' => $errors
             ], 400);
-        } 
+        }         
+        
+        
+        $bank = $request->user->bankAccounts()
+        ->where('id', $request->bank_account_id)->first();
+
+        if(!$bank){
+            return response()->json([
+                'errorMessage' => 'The selected bank account could not be found'
+            ], 404);
+        }
 
         return $next($request);
     }
