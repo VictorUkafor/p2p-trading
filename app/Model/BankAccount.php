@@ -16,4 +16,14 @@ class BankAccount extends Model
         'bank',
         'internet_banking',
     ];
+
+
+    /**
+     * Get the sellCrypto of a bank account.
+     */
+    public function sellCryptos()
+    {
+        return $this->belongsToMany('App\Model\SellCrypto', 'bank_account_id');
+    }
+
 }

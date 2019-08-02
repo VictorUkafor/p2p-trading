@@ -70,6 +70,14 @@ class User extends Authenticatable implements JWTSubject
 
 
     /**
+     * Get the wallet of a user.
+     */
+    public function wallet()
+    {
+        return $this->hasOne('App\Model\Wallet');
+    } 
+
+    /**
      * Get the mails of a user.
      */
     public function mails()
@@ -85,6 +93,33 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Model\BankAccount');
     }
+
+
+    /**
+     * Get the buyCryptos of a user.
+     */
+    public function buyCryptos()
+    {
+        return $this->hasMany('App\Model\BuyCrypto');
+    }
+
+
+    /**
+     * Get the buyCryptos of a user.
+     */
+    public function sellCryptos()
+    {
+        return $this->hasMany('App\Model\SellCrypto');
+    }
+
+
+    /**
+     * Get the transfers of a user.
+     */
+    public function transfers()
+    {
+        return $this->hasMany('App\Model\Transfers');
+    }
     
     
     /**
@@ -94,6 +129,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne('App\Model\Notification');
     }  
+
+
+    /**
+     * Get the commissions of a user.
+     */
+    public function commissions()
+    {
+        return $this->hasMany('App\Model\Commission');
+    } 
 
 }
 

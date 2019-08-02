@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class FindAccount
+class FindAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,18 +15,16 @@ class FindAccount
      */
     public function handle($request, Closure $next)
     {
-        $id = $request->route('accountId');
+        $user = $request->user;
+        $adminEmail = config('p2p.admin_email');
 
-        $account = $request->user->bankAccounts()
-        ->where('id', $id)->first();
-
-        if(!$account){
+        if($user->email !== $adminEmail){
             return response()->json([
-                'errorMessage' => 'Account can not be found',
-            ]   , 404); 
+                'errorMessage' => 'Unauthorized',
+            ], 401); 
         }
-
-        $request->account = $account;
+            
+        $request->admin = $user;
         return $next($request);
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Model\SellCrypto;
 
-class FindAccount
+class FindSale
 {
     /**
      * Handle an incoming request.
@@ -15,18 +16,23 @@ class FindAccount
      */
     public function handle($request, Closure $next)
     {
-        $id = $request->route('accountId');
+        $id = $request->route('saleId');
+        $adminEmail = config('p2p.admin_email');
 
-        $account = $request->user->bankAccounts()
+        $sellCrypto = $request->user->sellCryptos()
         ->where('id', $id)->first();
 
-        if(!$account){
+        if($request->user->email === $adminEmail){
+            $sellCrypto = SellCrypto::find($id);   
+        }
+
+        if(!$sellCrypto){
             return response()->json([
-                'errorMessage' => 'Account can not be found',
+                'errorMessage' => 'Transaction not found',
             ]   , 404); 
         }
 
-        $request->account = $account;
+        $request->sellCrypto = $sellCrypto;
         return $next($request);
     }
 }

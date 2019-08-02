@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Validator;
 
-class ValidateBankAccount
+class ValidateBuy
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,10 @@ class ValidateBankAccount
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'account_number' => 'required|numeric|digits:10',
-            'account_name' => 'required',
-            'bank' => 'required',
-            'internet_banking' => 'required'
+            'cryptocurrency' => 'required|in:BTC,LTC,ETH',
+            'amount_in_naira' => 'required|numeric',
+            'payment_method' => 'required|in:bank,card',
+            'method_details' => 'required',
         ]);
 
         if ($validator->fails()) {

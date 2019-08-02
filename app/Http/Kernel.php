@@ -90,9 +90,26 @@ class Kernel extends HttpKernel
         // for validating add account
         'validateAccount' => \App\Http\Middleware\ValidateBankAccount::class,
 
+        // for validating buy crypto
+        'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
+
+        // for validating sell crypto
+        'validateSell' => \App\Http\Middleware\ValidateSell::class,
+
         // for checking if an account exist
-        // and belongs to the user
-        'findAccount' => \App\Http\Middleware\findAccount::class,
+        'findAccount' => \App\Http\Middleware\FindAccount::class,
+
+        // for checking if a buy transaction exist
+        'findBuy' => \App\Http\Middleware\FindBuy::class,
+
+        // for checking if a sale transaction exist
+        'findSale' => \App\Http\Middleware\FindSale::class,
+
+        // for checking if a commission exist
+        'findCommission' => \App\Http\Middleware\FindCommission::class,
+
+        // check for admin user
+        'admin' => \App\Http\Middleware\FindAdmin::class,
 
         // jwt authentication
         'jwt.auth' => Tymon\JWTAuth\Http\Middleware\Authenticate::class,

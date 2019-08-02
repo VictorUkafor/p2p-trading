@@ -14,28 +14,33 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller {
 
     public function signup(Request $request) { 
-        try{
 
-            $user = new User;
+        $adminEmail = config('p2p.admin_email');
 
-            $user->email = $request->email;
-            $user->activation_token = str_random(60);
-            $user->save();
+        if($request->email === $adminEmail){
+            return response()->json([
+                'errorMessage' => 'Invalid email',
+            ], 400); 
+        }
+
+
+        $user = new User;
+        $user->email = $request->email;
+        $user->activation_token = str_random(60);
             
-            $user->notify(new EmailConfirmation());                 
-    
+        if($user->save()){
+            $user->notify(new EmailConfirmation());            
+            
             return response()->json([
                 'successMessage' => 'A confirmation mail has been sent to your email',
-            ]   , 201);   
-
-        } catch(Exception $e) {
-
-            return response()->json([
-                'errorMessage' => $e->getMessage(),
-            ]   , 500); 
+            ], 201);
 
         }
         
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
+
     }
 
 

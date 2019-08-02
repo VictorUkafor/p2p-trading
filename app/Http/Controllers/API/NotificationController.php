@@ -26,21 +26,20 @@ class NotificationController extends Controller
     }
 
 
-    public function pushNotification(Request $request){
+    public function push(Request $request){
 
         $notification = $request->user->notifications;
 
         if(!$notification){
             $notification = new Notification; 
             $notification->user_id = $request->user->id; 
+            $notification->push_notification = false;
         }
 
+        if($notification){
+            $notification->push_notification = !$notification->push_notification;
+        }
 
-        $previous_value = $notification->push_notification ? 
-        $notification->push_notification : false;
-
-        $notification->push_notification = $request->push_notification ? 
-        $request->push_notification : $previous_value;
 
         if($notification->save()){
             return response()->json([
@@ -56,7 +55,7 @@ class NotificationController extends Controller
     }
 
 
-    public function emailNotification(Request $request){
+    public function email(Request $request){
 
         $notification = $request->user->notifications;
 
@@ -65,11 +64,8 @@ class NotificationController extends Controller
             $notification->user_id = $request->user->id; 
         }
 
-        $previous_value = $notification->email_notification ? 
-        $notification->email_notification : true;
 
-        $notification->email_notification = $request->email_notification ? 
-        $request->email_notification : $previous_value;
+        $notification->email_notification = !$notification->email_notification;
 
         if($notification->save()){
             return response()->json([
@@ -92,13 +88,13 @@ class NotificationController extends Controller
         if(!$notification){
             $notification = new Notification; 
             $notification->user_id = $request->user->id; 
+            $notification->auto_logout = false;
         }
 
-        $previous_value = $notification->email_notification ? 
-        $notification->email_notification : true;
+        if($notification){
+            $notification->auto_logout = !$notification->auto_logout;
+        }
 
-        $notification->auto_logout = $request->auto_logout ? 
-        $request->auto_logout : $previous_value;
 
         if($notification->save()){
             return response()->json([
