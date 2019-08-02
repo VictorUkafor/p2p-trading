@@ -207,6 +207,23 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
 
+        // routes for commissions
+        Route::prefix('commissions')->group(function () {
+
+            // view all commissions
+            Route::get('/all', 'CommissionController@allCommissions')
+            ->middleware('admin');
+
+            // view all user commissions
+            Route::get('/', 'CommissionController@commissions');
+
+            // view a commission
+            Route::get('/{commissionId}', 'CommissionController@commission')
+            ->middleware('findCommission');
+
+        });
+
+
         // route for mailing p2p trading
         Route::post('/mail-us', 'MailController@create')
         ->middleware('validateMail'); 

@@ -105,6 +105,9 @@ class Kernel extends HttpKernel
         // for checking if a sale transaction exist
         'findSale' => \App\Http\Middleware\FindSale::class,
 
+        // for checking if a commission exist
+        'findCommission' => \App\Http\Middleware\FindCommission::class,
+
         // check for admin user
         'admin' => \App\Http\Middleware\FindAdmin::class,
 
