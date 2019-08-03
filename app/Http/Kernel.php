@@ -90,6 +90,9 @@ class Kernel extends HttpKernel
         // for validating add account
         'validateAccount' => \App\Http\Middleware\ValidateBankAccount::class,
 
+        // for validating creating of new bank account
+        'validateBank' => \App\Http\Middleware\ValidateBank::class,
+
         // for validating buy crypto
         'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
 
@@ -107,6 +110,12 @@ class Kernel extends HttpKernel
 
         // for checking if an account exist
         'findAccount' => \App\Http\Middleware\FindAccount::class,
+
+        // for checking if a created bank account exist
+        'findBank' => \App\Http\Middleware\FindBank::class,
+
+        // validate funding of fake account
+        'fundAccount' => \App\Http\Middleware\FundAccount::class,
 
         // for checking if a buy transaction exist
         'findBuy' => \App\Http\Middleware\FindBuy::class,

@@ -66,7 +66,16 @@ class User extends Authenticatable implements JWTSubject
     public function bvn()
     {
         return $this->hasOne('App\Model\Bvn');
-    }    
+    } 
+    
+
+    /**
+     * Get the banks of a user.
+     */
+    public function banks()
+    {
+        return $this->hasMany('App\Model\Bank');
+    } 
 
 
     /**

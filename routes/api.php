@@ -61,6 +61,26 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::get('/', 'AdminController@profile');   
 
         });
+
+
+        // routes for fake bank accounts
+        Route::prefix('banks')->group(function () {
+
+            // create new fake bank account
+            Route::post('/', 'BankController@create')->middleware('validateBank');   
+
+            // view all fake bank accounts
+            Route::get('/', 'BankController@accounts');  
+
+            // view a fake bank account
+            Route::get('/{accountNumber}', 'BankController@account')
+            ->middleware('findBank');
+            
+            // fund a fake bank account
+            Route::post('/{accountNumber}', 'BankController@fund')
+            ->middleware('fundAccount'); 
+
+        });
         
         
         // user profile
