@@ -32,7 +32,18 @@ class CommissionController extends Controller
 
 
     public function commissions(Request $request){
-        $commissions = $request->user->commissions;
+        $commissions = [];
+        
+        $sales = $request->user->wallet->sales;
+        $transfers = $request->user->wallet->transfers;
+
+        foreach($sales as $sale){
+            $commissions[] = $sale->commission;
+        }
+
+        foreach($transfers as $transfer){
+            $commissions[] = $transfer->commission;
+        }
 
         if(!count($commissions)){
             return response()->json([

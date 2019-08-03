@@ -224,6 +224,31 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
 
+        // routes for transfer
+        Route::prefix('transfer')->group(function () {
+            
+            // generate address
+            Route::post('/generate', 'TransferController@generateAddress')
+            ->middleware('validateCoin');
+
+            // view addresses
+            Route::get('/addresses', 'TransferController@addresses');
+                
+            // fund wallet with address
+            Route::post('/address', 'TransferController@fundWithAddress')
+            ->middleware('withAddress');
+
+            // view address
+            Route::get('/address/{address}', 'TransferController@address');
+            
+            // fund wallet with username
+            Route::post('/username', 'TransferController@fundWithUsername')
+            ->middleware('withUsername');
+
+
+        });
+
+
         // route for mailing p2p trading
         Route::post('/mail-us', 'MailController@create')
         ->middleware('validateMail'); 

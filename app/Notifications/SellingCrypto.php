@@ -46,8 +46,8 @@ class SellingCrypto extends Notification
         ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
         ->line('Thank you for your interest to sell '.
         round($this->sell->value, 10, PHP_ROUND_HALF_UP).$this->sell->cryptocurrency.
-        ' plus a charge of '.round($this->sell->commission->value, 7, PHP_ROUND_HALF_UP)
-        .$this->sell->cryptocurrency.' for N'.($this->sell->amount+$this->sell->commission->amount).
+        ' plus a charge of '.round($this->sell->commission->amount, 7, PHP_ROUND_HALF_UP)
+        .$this->sell->cryptocurrency.' for N'.($this->sell->amount).
         '. Your transaction is pending at the moment but you will be '.
         'notified when your transaction is reviewed and confirmed.')
         ->line('Thank you for patronizing us!');

@@ -49,17 +49,14 @@ class SellCryptoController extends Controller
 
 
         $crypto_in_naira = $request->crypto_amount * $sellingRate;
-        $commission_in_naira = $crypto_commission * $sellingRate;
 
         $commission = new Commission;
-        $commission->user_id = $user->id;
-        $commission->amount = $commission_in_naira;
-        $commission->value = $crypto_commission;
+        $commission->amount = $crypto_commission;
 
         $saved = false;
         if($commission->save()){
             $sell = new SellCrypto;
-            $sell->user_id = $user->id;
+            $sell->wallet_id = $user->wallet->id;
             $sell->commission_id = $commission->id;
             $sell->bank_account_id = $request->bank_account_id;
             $sell->cryptocurrency = $request->cryptocurrency;

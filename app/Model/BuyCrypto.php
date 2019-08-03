@@ -10,7 +10,7 @@ class BuyCrypto extends Model
     use SoftDeletes;
     
     protected $fillable = [
-        'user_id',
+        'wallet_id',
         'payment_method',
         'method_details',
         'cryptocurrency',
@@ -20,11 +20,11 @@ class BuyCrypto extends Model
     ];
 
     /**
-     * Get the user of the buyCrypto.
+     * Get the wallet of the buyCrypto.
      */
-    public function user()
+    public function wallet()
     {
-        return $this->belongsTo('App\Model\User');
+        return $this->belongsTo('App\Model\Wallet');
     }
 
 }

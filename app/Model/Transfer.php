@@ -7,16 +7,42 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transfer extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
     
     protected $fillable = [
-        'user_id',
-        'receiver_address',
-        'receiver_username',
-        'description',
-        'cryptocurrency',
-        'commission_id',
+        'method',
         'amount',
-        'status'
+        'coin',
+        'commission_id',
+        'sender_wallet_id',
+        'receiver_wallet_id',
     ];
+
+
+    /**
+     * Get the commission of the transfer.
+     */
+    public function commission()
+    {
+        return $this->belongsTo('App\Model\Commission');
+    }
+
+
+    /**
+     * Get the sender of the transfer.
+     */
+    public function sender()
+    {
+        return $this->belongsTo('App\Model\Wallet', 'sender_wallet_id');
+    }
+
+
+    /**
+     * Get the receiver of the transfer.
+     */
+    public function receiver()
+    {
+        return $this->belongsTo('App\Model\Wallet', 'receiver_wallet_id');
+    }
+
 }

@@ -14,6 +14,10 @@ return [
     'ltc_selling_commission_rate' => env('LTC_SELLING_COMMISSION_RATE'),
     'eth_selling_commission_rate' => env('ETH_SELLING_COMMISSION_RATE'),
 
+    'btc_transfer_commission_rate' => env('BTC_TRANSFER_COMMISSION_RATE'),
+    'ltc_transfer_commission_rate' => env('LTC_TRANSFER_COMMISSION_RATE'),
+    'eth_transfer_commission_rate' => env('ETH_TRANSFER_COMMISSION_RATE'),
+
     'admin_email' => env('ADMIN_EMAIL'),
     'admin_password' => env('ADMIN_PASSWORD'),
 

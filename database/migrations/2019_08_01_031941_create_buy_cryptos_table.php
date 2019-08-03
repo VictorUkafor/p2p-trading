@@ -15,7 +15,7 @@ class CreateBuyCryptosTable extends Migration
     {
         Schema::create('buy_cryptos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('wallet_id')->unsigned()->nullable();
             $table->string('cryptocurrency');
             $table->string('payment_method');
             $table->string('method_details');
@@ -27,8 +27,8 @@ class CreateBuyCryptosTable extends Migration
         });
 
         Schema::table('buy_cryptos', function($table) {
-            $table->foreign('user_id')->references('id')
-            ->on('users')->onDelete('cascade');
+            $table->foreign('wallet_id')->references('id')
+            ->on('wallets')->onDelete('cascade');
         });
     }
 
