@@ -10,9 +10,8 @@ class Commission extends Model
     use SoftDeletes;
     
     protected $fillable = [
-        'user_id',
         'amount',
-        'value',
+        'status',
     ];
 
 
@@ -21,7 +20,7 @@ class Commission extends Model
      */
     public function sellCrypto()
     {
-        return $this->belongsTo('App\Model\sellCrypto', 'commission_id');
+        return $this->belongsTo('App\Model\sellCrypto');
     } 
 
     /**
@@ -29,8 +28,10 @@ class Commission extends Model
      */
     public function transfer()
     {
-        return $this->belongsTo('App\Model\Transfer', 'commission_id');
+        return $this->belongsTo('App\Model\Transfer');
     } 
+
+ 
 
 
 }

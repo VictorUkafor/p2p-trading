@@ -17,22 +17,25 @@ class BuyCryptoController extends Controller
         $user = $request->user;
         $buyingRate = null;
 
-        if($request->cryptocurrency === 'BTC'){
+        switch ($request->cryptocurrency) {
+            case 'BTC':
             $buyingRate = config('p2p.btc_buying_rate');
-        }
-
-        if($request->cryptocurrency === 'LTC'){
+            break;
+            case 'LTC':
             $buyingRate = config('p2p.ltc_buying_rate');
-        }
-        
-        if($request->cryptocurrency === 'ETH'){
+            break;
+            case 'ETH':
             $buyingRate = config('p2p.eth_buying_rate');
-        }
+            break;
+            default:
+            $buyingRate = null;
+        } 
+
 
         $cryptocurrency = $request->amount_in_naira / $buyingRate;
 
         $buy = new BuyCrypto;
-        $buy->user_id = $user->id;
+        $buy->wallet_id = $user->wallet->id;
         $buy->cryptocurrency = $request->cryptocurrency;
         $buy->amount = $request->amount_in_naira;
         $buy->value = $cryptocurrency;

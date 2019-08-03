@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSellCryptosTable extends Migration
+class CreateWalletAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,17 @@ class CreateSellCryptosTable extends Migration
      */
     public function up()
     {
-        Schema::create('sell_cryptos', function (Blueprint $table) {
+        Schema::create('wallet_addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('wallet_id')->unsigned()->nullable();
-            $table->string('cryptocurrency');
-            $table->integer('bank_account_id');
-            $table->integer('commission_id');
-            $table->string('amount');
-            $table->string('value');
-            $table->string('status')->default('pending');
+            $table->string('address');
+            $table->string('coin');
+            $table->string('balance');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('sell_cryptos', function($table) {
+        Schema::table('wallet_addresses', function($table) {
             $table->foreign('wallet_id')->references('id')
             ->on('wallets')->onDelete('cascade');
         });
@@ -39,6 +36,6 @@ class CreateSellCryptosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sell_cryptos');
+        Schema::dropIfExists('wallet_addresses');
     }
 }

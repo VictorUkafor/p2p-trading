@@ -16,9 +16,9 @@ class CreateWalletsTable extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->float('BTC')->default(0.0);
-            $table->float('LTC')->default(0.0);
-            $table->float('ETH')->default(0.0);
+            $table->string('BTC');
+            $table->string('LTC');
+            $table->string('ETH');
             $table->timestamps();
             $table->softDeletes();
         });
