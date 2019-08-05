@@ -127,7 +127,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
             // route for updating bank account
             Route::put('/{accountId}', 'AccountController@updateAccount')
-            ->middleware(['findAccount', 'validateAccount']); 
+            ->middleware('findAccount'); 
 
         });
 
@@ -159,36 +159,34 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
 
-        // routes for buy crypto
-        Route::prefix('buy-cryptos')->group(function () {                
+        // routes for ads
+        Route::prefix('ads')->group(function () { 
+            
+            // view all my trade ads
+            Route::get('/', 'AdController@myAds');
                 
-            // view all buying transaction
-            Route::get('/', 'BuyCryptoController@buys');
+            // view all trade ads
+            Route::get('/all/trades', 'AdController@allAds');
 
-            // buy crypto
-            Route::post('/', 'BuyCryptoController@buyCrypto')
+            // create buy trade ad
+            Route::post('/buy', 'AdController@createBuyAd')
             ->middleware('validateBuy');
 
-            // view a single buying transaction
-            Route::get('/{buyId}', 'BuyCryptoController@buy')
-            ->middleware('findBuy');
+            // create sell trade ad
+            Route::post('/sell', 'AdController@createSellAd')
+            ->middleware('validateSell');
 
+            // view a trade ad
+            Route::get('/{adId}', 'AdCryptoController@ad')
+            ->middleware('findAd');
 
-            // routes for admin
-            Route::middleware('admin')->group(function () {                
-                    
-                // complete a buying transaction
-                Route::get('/all/buys', 'BuyCryptoController@allBuys');
+            // update a trade ad
+            Route::put('/{adId}', 'AdCryptoController@updateAd')
+            ->middleware('myAd');
 
-                // cancel a buying transaction
-                Route::post('/{buyId}/cancel', 'BuyCryptoController@cancel')
-                ->middleware('findBuy');
-
-                // complete a buying transaction
-                Route::post('/{buyId}/complete', 'BuyCryptoController@complete')
-                ->middleware('findBuy');
-
-            });
+            // remove a trade ad
+            Route::put('/{adId}', 'AdCryptoController@removeAd')
+            ->middleware('myAd');
 
         });
 

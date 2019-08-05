@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBanksTable extends Migration
+class CreateAdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,23 @@ class CreateBanksTable extends Migration
      */
     public function up()
     {
-        Schema::create('banks', function (Blueprint $table) {
+        Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('account_number');
-            $table->string('account_name');
-            $table->string('date_of_birth');
-            $table->string('bvn');
-            $table->string('bank');
-            $table->string('phone');
-            $table->string('balance');
+            $table->string('type');
+            $table->string('coin');
+            $table->integer('bank_account_id')->nullable();
+            $table->string('price');
+            $table->string('price_type');
+            $table->string('min');
+            $table->string('max');
+            $table->string('deadline')->nullable();
+            $table->string('state')->default('public');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('banks', function($table) {
+        Schema::table('ads', function($table) {
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
         });
@@ -40,6 +42,6 @@ class CreateBanksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banks');
+        Schema::dropIfExists('ads');
     }
 }

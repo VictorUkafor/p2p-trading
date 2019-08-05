@@ -18,9 +18,9 @@ class Commission extends Model
     /**
      * Get the sellCrypto of a commission.
      */
-    public function sellCrypto()
+    public function SellTrade()
     {
-        return $this->belongsTo('App\Model\sellCrypto');
+        return $this->belongsTo('App\Model\Trade');
     } 
 
     /**

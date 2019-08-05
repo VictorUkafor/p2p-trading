@@ -34,15 +34,15 @@ class BuyCryptoController extends Controller
 
         $cryptocurrency = $request->amount_in_naira / $buyingRate;
 
+        $request->account->balance -= $request->amount_in_naira;
+
         $buy = new BuyCrypto;
-        $buy->wallet_id = $user->wallet->id;
+        $buy->bank_account_id = $request->account->id;
         $buy->cryptocurrency = $request->cryptocurrency;
         $buy->amount = $request->amount_in_naira;
         $buy->value = $cryptocurrency;
-        $buy->payment_method = $request->payment_method;
-        $buy->method_details = $request->method_details;
 
-        if($buy->save()){
+        if($buy->save() && $request->account->save()){
 
             if(!$user->notifications || $user->notifications->email_notification){
                 $user->notify(new BuyingCrypto($user, $buy)); 

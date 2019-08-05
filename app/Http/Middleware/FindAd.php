@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Validator;
+use App\Model\Ad;
 
-class ValidateBVN
+class FindAd
 {
     /**
      * Handle an incoming request.
@@ -16,17 +16,17 @@ class ValidateBVN
      */
     public function handle($request, Closure $next)
     {
-        $validator = Validator::make($request->all(), [
-            'bvn_number' => 'required|numeric|digits:11|exists:banks,bvn',
-        ]);
+        $id = $request->route('adId');
 
-        if ($validator->fails()) {
-            $errors = $validator->errors();
+        $ad = Ad::find($id);
+
+        if(!$ad){
             return response()->json([
-                'errors' => $errors
-            ], 400);
-        } 
+                'errorMessage' => 'Ad could not be found',
+            ], 404); 
+        }
 
+        $request->ad = $ad;
         return $next($request);
     }
 }

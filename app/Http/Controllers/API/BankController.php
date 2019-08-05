@@ -11,13 +11,35 @@ class BankController extends Controller
 {
     public function create(Request $request){
 
+        if(!count($request->user->banks) && !$request->phone){
+            return response()->json([
+                'errorMessage' => 'Your phone is required',
+            ], 400);
+        } 
+
+
+        $bvn = mt_rand(10000000000, (int)99999999999);
+
+        if(count($request->user->banks)){
+            $bvn = $request->user->banks()->first()->bvn;
+        }
+
+        $phone = null;
+        if(count($request->user->banks)){
+            $phone = $request->user->banks()->first()->phone;
+        } else {
+            $phone = $request->phone;
+        }
+
         $account = new Bank;
         $account->user_id = $request->user->id;
         $account->bank = $request->bank;
         $account->account_name = $request->user->first_name.' '.$request->user->last_name;
         $account->date_of_birth = $request->user->date_of_birth;
         $account->account_number = mt_rand(1000000000, (int)9999999999);
-        $account->bvn = mt_rand(1000000000, (int)9999999999);
+        $account->account_number = mt_rand(500000000000, (int)999999999999);
+        $account->bvn = $bvn;
+        $account->phone = $phone;
         $account->balance = '0.00';
 
         if($account->save()){

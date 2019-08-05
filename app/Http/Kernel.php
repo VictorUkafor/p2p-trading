@@ -93,13 +93,13 @@ class Kernel extends HttpKernel
         // for validating creating of new bank account
         'validateBank' => \App\Http\Middleware\ValidateBank::class,
 
-        // for validating buy crypto
+        // for validating buy coin
         'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
 
         // for validating coin
         'validateCoin' => \App\Http\Middleware\ValidateCoin::class,
 
-        // for validating sell crypto
+        // for validating sell coin
         'validateSell' => \App\Http\Middleware\ValidateSell::class,
 
         // for validating fund with username form
@@ -117,11 +117,11 @@ class Kernel extends HttpKernel
         // validate funding of fake account
         'fundAccount' => \App\Http\Middleware\FundAccount::class,
 
-        // for checking if a buy transaction exist
-        'findBuy' => \App\Http\Middleware\FindBuy::class,
+        // for checking if an ad exist
+        'findAd' => \App\Http\Middleware\FindAd::class,
 
-        // for checking if a sale transaction exist
-        'findSale' => \App\Http\Middleware\FindSale::class,
+        // for checking if my ad exist
+        'myAd' => \App\Http\Middleware\myAd::class,
 
         // for checking if a commission exist
         'findCommission' => \App\Http\Middleware\FindCommission::class,

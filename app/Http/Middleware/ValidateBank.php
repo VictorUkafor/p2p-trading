@@ -18,6 +18,7 @@ class ValidateBank
     {
         $validator = Validator::make($request->all(), [
             'bank' => 'required',
+            'phone' => 'numeric|digits:11',
         ]);
 
         if ($validator->fails()) {

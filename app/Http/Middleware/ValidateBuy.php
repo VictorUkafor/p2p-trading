@@ -17,10 +17,12 @@ class ValidateBuy
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'cryptocurrency' => 'required|in:BTC,LTC,ETH',
-            'amount_in_naira' => 'required|numeric',
-            'payment_method' => 'required|in:bank,card',
-            'method_details' => 'required',
+            'coin' => 'required|in:BTC,LTC,ETH',
+            'price_type' => 'required|in:static,dynamic',
+            'price' => 'required|numeric',
+            'min' => 'required|numeric',
+            'max' => 'required|numeric',
+            'deadline' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -29,6 +31,7 @@ class ValidateBuy
                 'errors' => $errors
             ], 400);
         } 
+
 
         return $next($request);
     }

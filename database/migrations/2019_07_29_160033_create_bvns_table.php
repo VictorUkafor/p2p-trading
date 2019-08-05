@@ -17,10 +17,6 @@ class CreateBvnsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
             $table->string('bvn_number');
-            $table->string('phone');
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
             $table->boolean('verified')->default(false);
             $table->integer('otp_code')->nullable();
             $table->timestamps();

@@ -14,7 +14,9 @@ class Bank extends Model
         'account_number',
         'account_name',
         'date_of_birth',
+        'card',
         'bank',
+        'phone',
         'balance',
         'bvn',
     ];

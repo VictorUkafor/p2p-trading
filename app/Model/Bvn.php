@@ -13,10 +13,6 @@ class Bvn extends Model
     protected $fillable = [
         'user_id',
         'bvn_number',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'phone',
         'verified',
         'otp_code'
     ];
