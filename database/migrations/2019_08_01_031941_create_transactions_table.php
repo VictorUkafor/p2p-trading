@@ -20,15 +20,12 @@ class CreateTransactionsTable extends Migration
             $table->string('coin');
             $table->string('amount_in_cash');
             $table->string('amount_in_coin');
+            $table->string('approved_time')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('transactions', function($table) {
-            $table->foreign('client_id')->references('id')
-            ->on('clients')->onDelete('cascade');
-        });
     }
 
     /**

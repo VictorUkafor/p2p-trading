@@ -5,7 +5,7 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Commission extends Model
+class Fee extends Model
 {
     use SoftDeletes;
     
@@ -16,19 +16,19 @@ class Commission extends Model
 
 
     /**
-     * Get the sellCrypto of a commission.
-     */
-    public function SellTrade()
-    {
-        return $this->belongsTo('App\Model\Trade');
-    } 
-
-    /**
-     * Get the transfer of a commission.
+     * Get the transfer of a fee.
      */
     public function transfer()
     {
-        return $this->belongsTo('App\Model\Transfer');
+        return $this->hasOne('App\Model\Transfer');
+    } 
+
+    /**
+     * Get the transaction of a fee.
+     */
+    public function transaction()
+    {
+        return $this->hasOne('App\Model\Transaction');
     } 
 
  

@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class MyAd
+class Verify
 {
     /**
      * Handle an incoming request.
@@ -15,18 +15,14 @@ class MyAd
      */
     public function handle($request, Closure $next)
     {
-        $id = $request->route('adId');
 
-        $ad = $request->user->ads()->where('id', $id)->first();
-
-        if(!$ad){
+        if(!$request->user->bvn || !$request->user->bvn->verified){
             return response()->json([
-                'errorMessage' => 'Ad could not be found',
-            ], 404); 
+                'errorMessage' => 'Please verify your account'
+            ], 401);
         }
 
-        
-        $request->ad = $ad;
+
         return $next($request);
     }
 }

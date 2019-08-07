@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Model\Commission;
+use App\Model\Fee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CommissionController extends Controller
+class FeeController extends Controller
 {
-    public function allCommissions(){
-        $commissions = Commission::all();
+    public function allFees(){
+        $fees = Fee::all();
 
-        if(!count($commissions)){
+        if(!count($fees)){
             return response()->json([
-                'errorMessage' => 'No commission found',
+                'errorMessage' => 'No fee found',
             ], 404); 
         }
 
-        if(count($commissions)){
+        if(count($fees)){
             return response()->json([
-                'commissions' => $commissions,
+                'fees' => $fees,
             ], 200); 
         }
 
@@ -31,29 +31,29 @@ class CommissionController extends Controller
     }
 
 
-    public function commissions(Request $request){
-        $commissions = [];
+    public function fees(Request $request){
+        $fees = [];
         
-        $sales = $request->user->wallet->sales;
+        $clients = $request->user->clients;
         $transfers = $request->user->wallet->transfers;
 
-        foreach($sales as $sale){
-            $commissions[] = $sale->commission;
+        foreach($clients as $client){
+                $fees[] = $client->transaction->fee;
         }
 
         foreach($transfers as $transfer){
-            $commissions[] = $transfer->commission;
+            $fees[] = $transfer->fee;
         }
 
-        if(!count($commissions)){
+        if(!count($fees)){
             return response()->json([
-                'errorMessage' => 'No commission found',
+                'errorMessage' => 'No fee found',
             ], 404); 
         }
 
-        if(count($commissions)){
+        if(count($fees)){
             return response()->json([
-                'commissions' => $commissions,
+                'fees' => $fees,
             ], 200); 
         }
 
@@ -65,12 +65,12 @@ class CommissionController extends Controller
     }
 
 
-    public function commission(Request $request){
-        $commission = $request->commission;
+    public function fee(Request $request){
+        $fee = $request->fee;
 
-        if($commission){
+        if($fee){
             return response()->json([
-                'commission' => $commission,
+                'fee' => $fee,
             ], 200); 
         }
 

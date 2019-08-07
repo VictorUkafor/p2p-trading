@@ -96,6 +96,15 @@ class Kernel extends HttpKernel
         // for validating buy coin
         'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
 
+        // for validating engage ad
+        'validateEngage' => \App\Http\Middleware\ValidateEngage::class,
+
+        // for validating debit card
+        'validateCard' => \App\Http\Middleware\ValidateCard::class,
+
+        // for validating update buy coin
+        'updateBuy' => \App\Http\Middleware\UpdateBuy::class,
+
         // for validating coin
         'validateCoin' => \App\Http\Middleware\ValidateCoin::class,
 
@@ -121,10 +130,19 @@ class Kernel extends HttpKernel
         'findAd' => \App\Http\Middleware\FindAd::class,
 
         // for checking if my ad exist
-        'myAd' => \App\Http\Middleware\myAd::class,
+        'myAd' => \App\Http\Middleware\MyAd::class,
 
-        // for checking if a commission exist
-        'findCommission' => \App\Http\Middleware\FindCommission::class,
+        // for checking if an account is bvn verified
+        'verify' => \App\Http\Middleware\Verify::class,
+
+        // for checking if a client exist
+        'findClient' => \App\Http\Middleware\Findclient::class,
+
+        // 
+        'clientExist' => \App\Http\Middleware\ClientExist::class,
+
+        // for checking if a fee exist
+        'findFee' => \App\Http\Middleware\FindFee::class,
 
         // check for admin user
         'admin' => \App\Http\Middleware\FindAdmin::class,

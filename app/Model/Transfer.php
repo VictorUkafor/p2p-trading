@@ -7,24 +7,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transfer extends Model
 {
-    //use SoftDeletes;
+    use SoftDeletes;
     
     protected $fillable = [
         'method',
         'amount',
         'coin',
-        'commission_id',
+        'fee_id',
         'sender_wallet_id',
         'receiver_wallet_id',
     ];
 
 
     /**
-     * Get the commission of the transfer.
+     * Get the fee of the transfer.
      */
-    public function commission()
+    public function fee()
     {
-        return $this->belongsTo('App\Model\Commission');
+        return $this->belongsTo('App\Model\Fee');
     }
 
 

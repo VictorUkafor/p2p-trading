@@ -5,19 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Model\Ad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-// use App\Notifications\BuyingCrypto;
-// use App\Notifications\BuyingCryptoSuccess;
-// use App\Notifications\BuyingCryptoCancel;
 
 class AdController extends Controller
 {
 
     public function createSellAd(Request $request) { 
 
+        $user = $request->user;
+
         $sellAd = new Ad;
-        $sellAd->user_id = $request->user->id;
-        $sellAd->type = 'sell';
-        $sellAd->account_id = $request->account->id;
+        $sellAd->user_id = $user->id;
+        $sellAd->type = 'Sell';
+        $sellAd->referenceNo = '#'.mt_rand((int)100000000, (int)999999999);
         $sellAd->coin = $request->coin;
         $sellAd->price_type = $request->price_type;
         $sellAd->price = $request->price;
@@ -25,7 +24,9 @@ class AdController extends Controller
         $sellAd->max = $request->max;
         $sellAd->deadline = $request->deadline;
 
-        if($sellAd->save()){
+        $user->wallet[$request->coin] -= $request->max;
+
+        if($sellAd->save() && $user->wallet->save()){
             return response()->json([
                 'successMessage' => 'Sell trade ad created successfully',
                 'ad' => $sellAd
@@ -43,7 +44,8 @@ class AdController extends Controller
 
         $buyAd = new Ad;
         $buyAd->user_id = $request->user->id;
-        $buyAd->type = 'buy';
+        $buyAd->referenceNo = '#'.mt_rand((int)1000000000, (int)9999999999);
+        $buyAd->type = 'Buy';
         $buyAd->coin = $request->coin;
         $buyAd->price_type = $request->price_type;
         $buyAd->price = $request->price;
@@ -51,7 +53,9 @@ class AdController extends Controller
         $buyAd->max = $request->max;
         $buyAd->deadline = $request->deadline;
 
-        if($buyAd->save()){
+        $request->account->balance -= $request->max * $request->price;
+
+        if($buyAd->save() && $request->account->save()){
             return response()->json([
                 'successMessage' => 'Buy trade ad created successfully',
                 'ad' => $buyAd
@@ -67,7 +71,7 @@ class AdController extends Controller
 
     public function allAds(Request $request) { 
 
-        $ads = Ad::all();
+        $ads = Ad::where('state', 'public')->get();
 
         if(!count($ads)){
             return response()->json([
@@ -138,6 +142,12 @@ class AdController extends Controller
 
         $ad = $request->ad;
 
+        if($ad->state !== 'public' && $ad->state !== 'inactive'){
+            return response()->json([
+                'errorMessage' => 'Unauthorized',
+            ], 401); 
+        }
+
         $ad->min = $request->min;
         $ad->max = $request->max;
         $ad->deadline = $request->deadline;
@@ -160,7 +170,16 @@ class AdController extends Controller
 
         $ad = $request->ad;
 
-        if(Ad::destroy($ad->id)){
+        if($ad->state !== 'public' && $ad->state !== 'inactive'){
+            return response()->json([
+                'errorMessage' => 'Unauthorized',
+            ], 401); 
+        }
+
+        $remove = Ad::destroy($ad->id);
+        $request->account->balance += ($ad->max * $ad->price);
+
+        if($remove && $request->account->save()){
             return response()->json([
                 'successMessage' => 'Ad removed successfully',
             ], 200);            

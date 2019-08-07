@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SellingCrypto extends Notification
+class CoinDeposit extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class SellingCrypto extends Notification
      *
      * @return void
      */
-    public function __construct($user, $sell)
+    public function __construct($ad, $client)
     {
-        $this->user = $user;
-        $this->sell = $sell;
+        $this->ad = $ad;
+        $this->client = $client;
     }
 
     /**
@@ -42,14 +42,11 @@ class SellingCrypto extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('Concerning the selling of '.$this->sell->cryptocurrency)
-        ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
-        ->line('Thank you for your interest to sell '.
-        round($this->sell->value, 10, PHP_ROUND_HALF_UP).$this->sell->cryptocurrency.
-        ' plus a charge of '.round($this->sell->commission->amount, 7, PHP_ROUND_HALF_UP)
-        .$this->sell->cryptocurrency.' for N'.($this->sell->amount).
-        '. Your transaction is pending at the moment but you will be '.
-        'notified when your transaction is reviewed and confirmed.')
+        ->subject('Coin has been deposited for '.$this->ad->type.' Trade Ad '.$this->ad->referenceNo)
+        ->greeting('Hello '.$this->ad->creator->first_name.' '.$this->ad->creator->last_name)
+        ->line('This is to notify you that '.$this->client->user->first_name.' '.
+        $this->client->user->last_name.' has deposited the approved coins for '.$this->ad->type.' Trade Ad '.
+        $this->ad->referenceNo.'. Please review the transaction for the next step')
         ->line('Thank you for patronizing us!');
     }
 

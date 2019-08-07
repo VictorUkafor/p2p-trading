@@ -18,7 +18,7 @@ class BankController extends Controller
         } 
 
 
-        $bvn = mt_rand(10000000000, (int)99999999999);
+        $bvn = mt_rand((int)1111111111, (int)9999999999);
 
         if(count($request->user->banks)){
             $bvn = $request->user->banks()->first()->bvn;
@@ -36,8 +36,8 @@ class BankController extends Controller
         $account->bank = $request->bank;
         $account->account_name = $request->user->first_name.' '.$request->user->last_name;
         $account->date_of_birth = $request->user->date_of_birth;
-        $account->account_number = mt_rand(1000000000, (int)9999999999);
-        $account->account_number = mt_rand(500000000000, (int)999999999999);
+        $account->account_number = mt_rand((int)1111111111, (int)9999999999);
+        $account->card = mt_rand((int)50000000000, (int)9999999999);
         $account->bvn = $bvn;
         $account->phone = $phone;
         $account->balance = '0.00';

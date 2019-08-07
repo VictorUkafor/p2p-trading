@@ -15,16 +15,13 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->increments('ad_id');
+            $table->integer('user_id');
+            $table->integer('ad_id')->unsigned()->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('clients', function($table) {
-            $table->foreign('ad_id')->references('id')
-            ->on('ads')->onDelete('cascade');
-        });
     }
 
     /**

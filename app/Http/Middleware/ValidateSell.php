@@ -17,7 +17,7 @@ class ValidateSell
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'account_number' => 'required|numeric|digits:10',
+            'account_number' => 'required',
             'coin' => 'required|in:BTC,LTC,ETH',
             'price_type' => 'required|in:static,dynamic',
             'price' => 'required|numeric',
@@ -39,17 +39,14 @@ class ValidateSell
             ], 404); 
         }
 
-        
-        $account = $request->user->bankAccounts()
-        ->where('account_number', $request->account_number)->first();
 
-        if(!$account){
+        if($request->max < $request->min){
             return response()->json([
-                'errorMessage' => 'The selected bank account could not be found'
-            ], 404);
+                'errorMessage' => 'Max must be greater than Min'
+            ], 400);
         }
 
-        $request->account = $account;
+        
         return $next($request);
     }
 }

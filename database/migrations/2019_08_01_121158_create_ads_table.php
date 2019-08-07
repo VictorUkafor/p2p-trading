@@ -16,6 +16,7 @@ class CreateAdsTable extends Migration
         Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
+            $table->string('referenceNo');
             $table->string('type');
             $table->string('coin');
             $table->integer('bank_account_id')->nullable();

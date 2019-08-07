@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class MyAd
+class Findclient
 {
     /**
      * Handle an incoming request.
@@ -15,18 +15,22 @@ class MyAd
      */
     public function handle($request, Closure $next)
     {
-        $id = $request->route('adId');
 
-        $ad = $request->user->ads()->where('id', $id)->first();
+        $id = $request->route('clientId');
+        
+        $client = $request->ad->clients()
+        ->where([
+            'user_id' => $request->user->id,
+            'id' => $id
+            ])->first();
 
-        if(!$ad){
+        if(!$client){
             return response()->json([
-                'errorMessage' => 'Ad could not be found',
-            ], 404); 
+                'errorMessage' => 'Unauthorized',
+            ], 401); 
         }
 
-        
-        $request->ad = $ad;
+        $request->client = $client;
         return $next($request);
     }
 }

@@ -21,6 +21,7 @@ class CreateBanksTable extends Migration
             $table->string('date_of_birth');
             $table->string('bvn');
             $table->string('bank');
+            $table->string('card');
             $table->string('phone');
             $table->string('balance');
             $table->timestamps();

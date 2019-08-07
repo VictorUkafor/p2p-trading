@@ -11,6 +11,7 @@ class Ad extends Model
     
     protected $fillable = [
         'user_id',
+        'referenceNo',
         'type',
         'bank_account_id',
         'coin',
@@ -29,6 +30,23 @@ class Ad extends Model
     public function bankAccount()
     {
         return $this->belongsTo('App\Model\BankAccount');
+    }
+
+    /**
+     * Get the creator of the add.
+     */
+    public function creator()
+    {
+        return $this->belongsTo('App\Model\User', 'user_id');
+    }
+
+
+    /**
+     * Get the client of the.
+     */
+    public function clients()
+    {
+        return $this->hasMany('App\Model\Client');
     }
 
 
