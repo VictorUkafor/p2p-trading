@@ -19,36 +19,26 @@ class AccountController extends Controller
                 'errorMessage' => 'Unauthorized action'
             ], 401);
         }
+        
+        $code = mt_rand(1000000, 9999999);
 
-        try{
+        $bvn = new Bvn;
+        $bvn->user_id = $user->id;
+        $bvn->bvn_number = $request->bvn_number;
+        $bvn->otp_code = $code;
 
-            $code = mt_rand(1000000, 9999999);
+        $user->phone = $request->phone;
 
-            $bvn = new Bvn;
-            $bvn->user_id = $user->id;
-            $bvn->bvn_number = $request->bvn_number;
-            $bvn->first_name = $request->first_name;
-            $bvn->last_name = $request->last_name;
-            $bvn->middle_name = $request->middle_name;
-            $bvn->phone = $request->phone;
-            $bvn->otp_code = $code;
-            $bvn->save();
-
-            $user->phone = $request->phone;
-            $user->save();
-
+        if($bvn->save() && $user->save()){
             return response()->json([
                 'successMessage' => 'BVN added successfull',
                 'bvn' => $bvn,
-            ], 200);
-
-        } catch(Exception $e) {
-
-            return response()->json([
-                'errorMessage' => $e->getMessage(),
-            ]   , 500); 
-
+            ], 201);            
         }
+        
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
         
     }
 
@@ -57,41 +47,31 @@ class AccountController extends Controller
 
         $user = $request->user;
 
-        if(!$user->bvn){
+        if(!$user->bvn || $user->bvn->verified){
             return response()->json([
                 'errorMessage' => 'Unauthorized action'
             ], 401);
         }
 
 
-        try{
+        $code = mt_rand(1000000, 9999999);
 
-            $code = mt_rand(1000000, 9999999);
+        $bvn = $user->bvn;
+        $bvn->bvn_number = $request->bvn_number;
+        $bvn->otp_code = $code;
 
-            $bvn = $user->bvn;
-            $bvn->bvn_number = $request->bvn_number;
-            $bvn->first_name = $request->first_name;
-            $bvn->last_name = $request->last_name;
-            $bvn->middle_name = $request->middle_name;
-            $bvn->phone = $request->phone;
-            $bvn->otp_code = $code;
-            $bvn->save();
+        $user->phone = $request->phone;
 
-            $user->phone = $request->phone;
-            $user->save();
-
+        if($bvn->save() && $user->save()){
             return response()->json([
-                'successMessage' => 'BVN added successfull',
+                'successMessage' => 'BVN updated successfull',
                 'bvn' => $bvn,
-            ], 200);
-
-        } catch(Exception $e) {
-
-            return response()->json([
-                'errorMessage' => $e->getMessage(),
-            ]   , 500); 
-
+            ], 201);            
         }
+
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
         
     }
 
@@ -163,15 +143,15 @@ class AccountController extends Controller
 
         if($account){
             return response()->json([
-                'errorMessage' => 'Unauthorized action',
-            ]   , 401); 
+                'errorMessage' => 'Account has been added already',
+            ], 404); 
         }
 
         $account = new BankAccount;
         $account->user_id = $request->user->id;
-        $account->account_name = $request->account_name;
-        $account->account_number = $request->account_number;
-        $account->bank = $request->bank;
+        $account->account_name = $request->account->account_name;
+        $account->account_number = $request->account->account_number;
+        $account->bank = $request->account->bank;
         $account->internet_banking = $request->internet_banking;
 
         if($account->save()){
@@ -192,7 +172,7 @@ class AccountController extends Controller
 
         $account = $request->account;
 
-        $account->internet_banking = $request->internet_banking;
+        $account->internet_banking = !$account->internet_banking;
 
         if($account->save()){
             return response()->json([
@@ -233,12 +213,10 @@ class AccountController extends Controller
 
     public function account(Request $request){
 
-         return response()->json([
+        return response()->json([
             'account' => $request->account,
         ], 200);        
 
     }
-
-
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class BuyingCryptoCancel extends Notification
+class TradeDecline extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class BuyingCryptoCancel extends Notification
      *
      * @return void
      */
-    public function __construct($user, $buy)
+    public function __construct($ad, $client)
     {
-        $this->user = $user;
-        $this->buy = $buy;
+        $this->ad = $ad;
+        $this->client = $client;
     }
 
     /**
@@ -42,13 +42,12 @@ class BuyingCryptoCancel extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('Cancellation of transaction')
-        ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
-        ->line('We are sorry to inform you that the purchase of '.
-        round($this->buy->value, 5, PHP_ROUND_HALF_UP).$this->buy->cryptocurrency.
-        ' could not be processed at this time and it\'s therefore cancelled'.
-        '. You can reachout to us for more info or better still make another transaction.')
-        ->line('We are so sorry for any inconviences and we highly appreciate your patronage!');
+        ->subject('Your engaged '.$this->ad->type.' Trade Ad '.$this->ad->referenceNo.' has been declined')
+        ->greeting('Hello '.$this->client->user->first_name.' '.$this->client->user->last_name)
+        ->line('This is to notify you that the owner of the '.$this->ad->type.' Trade Ad '.$this->ad->referenceNo.
+        ' you engaged has declined your engagement. Please reachout to them for more info; '.
+        $this->ad->creator->first_name.' '.$this->ad->creator->last_name.', '.$this->ad->creator->phone )
+        ->line('Thank you for patronizing us!');
     }
 
     /**

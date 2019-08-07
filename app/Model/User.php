@@ -66,7 +66,16 @@ class User extends Authenticatable implements JWTSubject
     public function bvn()
     {
         return $this->hasOne('App\Model\Bvn');
-    }    
+    } 
+    
+
+    /**
+     * Get the banks of a user.
+     */
+    public function banks()
+    {
+        return $this->hasMany('App\Model\Bank');
+    } 
 
 
     /**
@@ -96,20 +105,11 @@ class User extends Authenticatable implements JWTSubject
 
 
     /**
-     * Get the buyCryptos of a user.
+     * Get the ads of a user.
      */
-    public function buyCryptos()
+    public function ads()
     {
-        return $this->hasMany('App\Model\BuyCrypto');
-    }
-
-
-    /**
-     * Get the buyCryptos of a user.
-     */
-    public function sellCryptos()
-    {
-        return $this->hasMany('App\Model\SellCrypto');
+        return $this->hasMany('App\Model\Ad');
     }
 
 
@@ -132,12 +132,12 @@ class User extends Authenticatable implements JWTSubject
 
 
     /**
-     * Get the commissions of a user.
+     * Get the clients of the user.
      */
-    public function commissions()
+    public function clients()
     {
-        return $this->hasMany('App\Model\Commission');
-    } 
+        return $this->hasMany('App\Model\Client');
+    }  
 
 }
 

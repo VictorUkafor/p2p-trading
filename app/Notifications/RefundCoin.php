@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class BuyingCrypto extends Notification
+class RefundCoin extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class BuyingCrypto extends Notification
      *
      * @return void
      */
-    public function __construct($user, $buy)
+    public function __construct($ad, $client)
     {
-        $this->user = $user;
-        $this->buy = $buy;
+        $this->ad = $ad;
+        $this->client = $client;
     }
 
     /**
@@ -42,12 +42,13 @@ class BuyingCrypto extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('Concerning the buying of '.$this->buy->cryptocurrency)
-        ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
-        ->line('We received your request for the purchase of '.
-        round($this->buy->value, 5, PHP_ROUND_HALF_UP).$this->buy->cryptocurrency.
-        '. Your transaction is pending at the moment but you will be '.
-        'notified when your transaction is reviewed and confirmed.')
+        ->subject('Your coin for '.$this->ad->type.' Trade Ad '.
+        $this->ad->referenceNo.' has been refunded')
+        ->greeting('Hello '.$this->client->user->first_name.' '.
+        $this->client->user->last_name)
+        ->line('This is to notify you that your coin deposit for '.
+        $this->ad->type.' Trade Ad '.$this->ad->referenceNo.
+        ' has been refunded' )
         ->line('Thank you for patronizing us!');
     }
 

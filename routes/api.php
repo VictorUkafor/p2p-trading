@@ -61,6 +61,27 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             Route::get('/', 'AdminController@profile');   
 
         });
+
+
+        // routes for fake bank accounts
+        Route::prefix('banks')->group(function () {
+
+            // create new fake bank account
+            Route::post('/', 'BankController@create')
+            ->middleware('validateBank');   
+
+            // view all fake bank accounts
+            Route::get('/', 'BankController@accounts');  
+
+            // view a fake bank account
+            Route::get('/{accountNumber}', 'BankController@account')
+            ->middleware('findBank');
+            
+            // fund a fake bank account
+            Route::post('/{accountNumber}', 'BankController@fund')
+            ->middleware('fundAccount'); 
+
+        });
         
         
         // user profile
@@ -74,185 +95,235 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
         });
 
-            
-        // route for verifing BVN number
-        Route::post('/bvn', 'AccountController@bvn')
-        ->middleware('validateBVN'); 
-            
-        // route for updating BVN
-        Route::put('/bvn-update', 'AccountController@bvnUpdate')
-        ->middleware('validateBVN'); 
-            
-        // route for sending OTP
-        Route::get('/send-otp', 'AccountController@sendOTP'); 
 
-        // route for verifing OTP
-        Route::post('/verify-otp', 'AccountController@OTPVerification')
-        ->middleware('validateOTP'); 
-        
-        
-        // routes for bank accounts
-        Route::prefix('bank-accounts')->group(function () {            
+        // bvn routes
+        Route::prefix('bvn')->group(function () {
             
-            // route for viewing all bank accounts
-            Route::get('/', 'AccountController@accounts'); 
+            // route for verifing BVN number
+            Route::post('/', 'AccountController@bvn')
+            ->middleware('validateBVN');         
+            
+            // route for updating BVN
+            Route::put('/', 'AccountController@bvnUpdate')
+            ->middleware('validateBVN');         
+            
+            // route for sending OTP
+            Route::post('/send-otp', 'AccountController@sendOTP');        
+            
+            // route for verifing OTP
+            Route::post('/verify-otp', 'AccountController@OTPVerification')
+            ->middleware('validateOTP'); 
+
+        });           
+
+
+        // only for bvn verified accounts
+        Route::middleware('verify')->group(function () {
+            
+
+            // routes for bank accounts
+            Route::prefix('bank-accounts')->group(function () {            
                 
-            // route for adding bank account
-            Route::post('/', 'AccountController@addAccount')
-            ->middleware('validateAccount');             
+                // route for viewing all bank accounts
+                Route::get('/', 'AccountController@accounts'); 
+                
+                // route for adding bank account
+                Route::post('/', 'AccountController@addAccount')
+                ->middleware('validateAccount');             
             
-            // route for viewing a single bank accounts
-            Route::get('/{accountId}', 'AccountController@account')
-            ->middleware('findAccount'); 
+                // route for viewing a single bank accounts
+                Route::get('/{accountId}', 'AccountController@account')
+                ->middleware('findAccount'); 
 
-            // route for updating bank account
-            Route::put('/{accountId}', 'AccountController@updateAccount')
-            ->middleware(['findAccount', 'validateAccount']); 
+                // route for updating bank account
+                Route::put('/{accountId}', 'AccountController@updateAccount')
+                ->middleware('findAccount'); 
 
+            });
+            
+            
+            // routes for notifications
+            Route::prefix('notifications')->group(function () {
+                
+                // route for viewing notifications
+                Route::get('/', 'NotificationController@notifications');
+
+                // route for setting push notification
+                Route::post('/push', 'NotificationController@push');
+
+                // route for setting email notification
+                Route::post('/email', 'NotificationController@email');
+
+                // route for setting auto-logout
+                Route::post('/auto-logout', 'NotificationController@autoLogout');
+
+            });
+            
+            
+            // routes for wallet
+            Route::prefix('wallet')->group(function () {
+
+                // get wallet 
+                Route::get('/', 'WalletController@wallet');
+
+            });
+
+
+            // routes for ads
+            Route::prefix('ads')->group(function () { 
+            
+                // view all my trade ads
+                Route::get('/', 'AdController@myAds');
+                
+                // view all trade ads
+                Route::get('/all/trades', 'AdController@allAds');
+
+                // create buy trade ad
+                Route::post('/buy', 'AdController@createBuyAd')
+                ->middleware('validateBuy');
+
+                // create sell trade ad
+                Route::post('/sell', 'AdController@createSellAd')
+                ->middleware('validateSell');
+
+
+                // routes for single ads
+                Route::group([
+                'prefix' => '{adId}',
+                'middleware' => 'findAd',
+                ], function () {
+                
+                    // view a trade ad
+                    Route::get('/', 'AdController@ad');
+
+                    // engage an add
+                    Route::post('/engage', 'TransactionController@engageAd')
+                    ->middleware('validateEngage');
+
+
+                    // middleware finding client
+                    Route::middleware('findClient')->group(function () {                    
+                        
+                        // deposit coin for selling
+                        Route::post('/deposit-coin/{clientId}', 'SellerClientController@depositCoin');
+
+                        // make payment for buying coins
+                        Route::post('/make-payment/{clientId}', 'BuyerClientController@makePayment')
+                        ->middleware('validateCard');
+
+                        // refund coin after rejection by the buyer
+                        Route::post('/refund-coin/{clientId}', 'SellerClientController@refundCoin');
+
+                        // refund payment after rejection by the seller
+                        Route::post('/refund-payment/{clientId}', 'BuyerClientController@refundPayment')
+                        ->middleware('validateCard');
+
+                    });
+
+                });
+                
+                
+                // routes for my ads
+                Route::group([
+                    'prefix' => '{adId}',
+                    'middleware' => 'myAd',
+                ], function () {
+                    
+                    // update a trade ad
+                    Route::put('/', 'AdController@updateAd')
+                    ->middleware('updateBuy');
+                
+                    // remove a trade ad
+                    Route::post('/remove', 'AdController@removeAd')
+                    ->middleware('validateCard');
+
+
+                    // client exist
+                    Route::middleware('clientExist')->group(function () {
+                        
+                        // approve an add
+                        Route::post('/approve/{clientId}', 'TransactionController@approveTrade');
+
+                        // decline an add
+                        Route::post('/decline/{clientId}', 'TransactionController@declineTrade')
+                        ->middleware('validateCard');  
+
+                        // confirm deposit of coin by the buyer
+                        Route::post('/confirm-coin/{clientId}', 'SellerClientController@confirmDeposit')
+                        ->middleware('validateCard'); 
+
+                        // confirm confirm payment by the seller
+                        Route::post('/confirm-payment/{clientId}', 'BuyerClientController@confirmPayment');
+
+                        // reject coin deposit by the buyer
+                        Route::post('/reject-coin/{clientId}', 'SellerClientController@declineCoin')
+                        ->middleware('validateCard');
+
+                        // reject payment by the seller
+                        Route::post('/reject-payment/{clientId}', 'BuyerClientController@declinePayment'); 
+
+                        // refund balance to buyer
+                        Route::post('/refund-balance/{clientId}', 'SellerClientController@refundBalance')
+                        ->middleware('validateCard'); 
+
+                    });   
+                
+
+                
+                });
+            
+            });
+            
+            
+            // routes for fees
+            Route::prefix('fees')->group(function () {
+
+                // view all fees
+                Route::get('/all', 'FeeController@allFees')
+                ->middleware('admin');
+
+                // view all user fees
+                Route::get('/', 'FeeController@fees');
+
+                // view a fee
+                Route::get('/{feeId}', 'FeeController@fee')
+                ->middleware('findFee');
+
+            });
+
+
+            // routes for transfer
+            Route::prefix('transfer')->group(function () {
+            
+                // generate address
+                Route::post('/generate', 'TransferController@generateAddress')
+                ->middleware('validateCoin');
+
+                // view addresses
+                Route::get('/addresses', 'TransferController@addresses');
+                
+                // fund wallet with address
+                Route::post('/address', 'TransferController@fundWithAddress')
+                ->middleware('withAddress');
+
+                // view address
+                Route::get('/address/{address}', 'TransferController@address');
+            
+                // fund wallet with username
+                Route::post('/username', 'TransferController@fundWithUsername')
+                ->middleware('withUsername');
+            
+            });
+            
+            
+            // route for mailing p2p trading
+            Route::post('/mail-us', 'MailController@create')
+            ->middleware('validateMail');
+        
         });
-
     
-        // routes for notifications
-        Route::prefix('notifications')->group(function () {
-                
-            // route for viewing notifications
-            Route::get('/', 'NotificationController@notifications');
-
-            // route for setting push notification
-            Route::post('/push', 'NotificationController@push');
-
-            // route for setting email notification
-            Route::post('/email', 'NotificationController@email');
-
-            // route for setting auto-logout
-            Route::post('/auto-logout', 'NotificationController@autoLogout');
-
-        });
-
-
-        // routes for wallet
-        Route::prefix('wallet')->group(function () {
-
-            // get wallet 
-            Route::get('/', 'WalletController@wallet');
-
-        });
-
-
-        // routes for buy crypto
-        Route::prefix('buy-cryptos')->group(function () {                
-                
-            // view all buying transaction
-            Route::get('/', 'BuyCryptoController@buys');
-
-            // buy crypto
-            Route::post('/', 'BuyCryptoController@buyCrypto')
-            ->middleware('validateBuy');
-
-            // view a single buying transaction
-            Route::get('/{buyId}', 'BuyCryptoController@buy')
-            ->middleware('findBuy');
-
-
-            // routes for admin
-            Route::middleware('admin')->group(function () {                
-                    
-                // complete a buying transaction
-                Route::get('/all/buys', 'BuyCryptoController@allBuys');
-
-                // cancel a buying transaction
-                Route::post('/{buyId}/cancel', 'BuyCryptoController@cancel')
-                ->middleware('findBuy');
-
-                // complete a buying transaction
-                Route::post('/{buyId}/complete', 'BuyCryptoController@complete')
-                ->middleware('findBuy');
-
-            });
-
-        });
-
-
-        // routes for sell crypto
-        Route::prefix('sell-cryptos')->group(function () {                
-                
-            // view all sales transaction
-            Route::get('/', 'SellCryptoController@sales');
-
-            // sell crypto
-            Route::post('/', 'SellCryptoController@sellCrypto')
-            ->middleware('validateSell');
-
-            // view a single buying transaction
-            Route::get('/{saleId}', 'SellCryptoController@sale')
-            ->middleware('findSale');
-
-
-            // routes for admin
-            Route::middleware('admin')->group(function () {                
-                    
-                // complete a sales transaction
-                Route::get('/all/sales', 'SellCryptoController@allSales');
-
-                // cancel a sale transaction
-                Route::post('/{saleId}/cancel', 'SellCryptoController@cancel')
-                ->middleware('findSale');
-
-                // complete a sale transaction
-                Route::post('/{saleId}/complete', 'SellCryptoController@complete')
-                ->middleware('findSale');
-
-            });
-
-        });
-
-
-        // routes for commissions
-        Route::prefix('commissions')->group(function () {
-
-            // view all commissions
-            Route::get('/all', 'CommissionController@allCommissions')
-            ->middleware('admin');
-
-            // view all user commissions
-            Route::get('/', 'CommissionController@commissions');
-
-            // view a commission
-            Route::get('/{commissionId}', 'CommissionController@commission')
-            ->middleware('findCommission');
-
-        });
-
-
-        // routes for transfer
-        Route::prefix('transfer')->group(function () {
-            
-            // generate address
-            Route::post('/generate', 'TransferController@generateAddress')
-            ->middleware('validateCoin');
-
-            // view addresses
-            Route::get('/addresses', 'TransferController@addresses');
-                
-            // fund wallet with address
-            Route::post('/address', 'TransferController@fundWithAddress')
-            ->middleware('withAddress');
-
-            // view address
-            Route::get('/address/{address}', 'TransferController@address');
-            
-            // fund wallet with username
-            Route::post('/username', 'TransferController@fundWithUsername')
-            ->middleware('withUsername');
-
-
-        });
-
-
-        // route for mailing p2p trading
-        Route::post('/mail-us', 'MailController@create')
-        ->middleware('validateMail'); 
-        
+    
     });
+
 
 });

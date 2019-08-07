@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SellingCryptoSuccess extends Notification
+class PaymentDecline extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class SellingCryptoSuccess extends Notification
      *
      * @return void
      */
-    public function __construct($user, $sell)
+    public function __construct($ad, $client)
     {
-        $this->user = $user;
-        $this->sell = $sell;
+        $this->ad = $ad;
+        $this->client = $client;
     }
 
     /**
@@ -42,14 +42,10 @@ class SellingCryptoSuccess extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject(round($this->sell->value, 10, PHP_ROUND_HALF_UP).
-        $this->sell->cryptocurrency.' sold successfully')
-        ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
-        ->line('We are glad to inform you that your transaction for the selling of '.
-        round($this->sell->value, 5, PHP_ROUND_HALF_UP).$this->sell->cryptocurrency.
-        ' with a charge of '.round($this->sell->commission->amount, 5, PHP_ROUND_HALF_UP)
-        .$this->sell->cryptocurrency.' for N'.($this->sell->amount).
-        ' has been successful and your bank account accordingly.')
+        ->subject('Your payment for '.$this->ad->type.' Trade Ad '.$this->ad->referenceNo.' has been rejected')
+        ->greeting('Hello '.$this->client->user->first_name.' '.$this->client->user->last_name)
+        ->line('This is to notify you that the owner of the '.$this->ad->type.' Trade Ad '.$this->ad->referenceNo.
+        ' has rejected the payment you made for the transaction. Please login to your account and request for a refund')
         ->line('Thank you for patronizing us!');
     }
 

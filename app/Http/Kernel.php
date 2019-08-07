@@ -90,13 +90,25 @@ class Kernel extends HttpKernel
         // for validating add account
         'validateAccount' => \App\Http\Middleware\ValidateBankAccount::class,
 
-        // for validating buy crypto
+        // for validating creating of new bank account
+        'validateBank' => \App\Http\Middleware\ValidateBank::class,
+
+        // for validating buy coin
         'validateBuy' => \App\Http\Middleware\ValidateBuy::class,
+
+        // for validating engage ad
+        'validateEngage' => \App\Http\Middleware\ValidateEngage::class,
+
+        // for validating debit card
+        'validateCard' => \App\Http\Middleware\ValidateCard::class,
+
+        // for validating update buy coin
+        'updateBuy' => \App\Http\Middleware\UpdateBuy::class,
 
         // for validating coin
         'validateCoin' => \App\Http\Middleware\ValidateCoin::class,
 
-        // for validating sell crypto
+        // for validating sell coin
         'validateSell' => \App\Http\Middleware\ValidateSell::class,
 
         // for validating fund with username form
@@ -108,14 +120,29 @@ class Kernel extends HttpKernel
         // for checking if an account exist
         'findAccount' => \App\Http\Middleware\FindAccount::class,
 
-        // for checking if a buy transaction exist
-        'findBuy' => \App\Http\Middleware\FindBuy::class,
+        // for checking if a created bank account exist
+        'findBank' => \App\Http\Middleware\FindBank::class,
 
-        // for checking if a sale transaction exist
-        'findSale' => \App\Http\Middleware\FindSale::class,
+        // validate funding of fake account
+        'fundAccount' => \App\Http\Middleware\FundAccount::class,
 
-        // for checking if a commission exist
-        'findCommission' => \App\Http\Middleware\FindCommission::class,
+        // for checking if an ad exist
+        'findAd' => \App\Http\Middleware\FindAd::class,
+
+        // for checking if my ad exist
+        'myAd' => \App\Http\Middleware\MyAd::class,
+
+        // for checking if an account is bvn verified
+        'verify' => \App\Http\Middleware\Verify::class,
+
+        // for checking if a client exist
+        'findClient' => \App\Http\Middleware\Findclient::class,
+
+        // 
+        'clientExist' => \App\Http\Middleware\ClientExist::class,
+
+        // for checking if a fee exist
+        'findFee' => \App\Http\Middleware\FindFee::class,
 
         // check for admin user
         'admin' => \App\Http\Middleware\FindAdmin::class,

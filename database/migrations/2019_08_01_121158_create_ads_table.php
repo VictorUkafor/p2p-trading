@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBvnsTable extends Migration
+class CreateAdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,24 @@ class CreateBvnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bvns', function (Blueprint $table) {
+        Schema::create('ads', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('bvn_number');
-            $table->boolean('verified')->default(false);
-            $table->integer('otp_code')->nullable();
+            $table->string('referenceNo');
+            $table->string('type');
+            $table->string('coin');
+            $table->integer('bank_account_id')->nullable();
+            $table->string('price');
+            $table->string('price_type');
+            $table->string('min');
+            $table->string('max');
+            $table->string('deadline')->nullable();
+            $table->string('state')->default('public');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('bvns', function($table) {
+        Schema::table('ads', function($table) {
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
         });
@@ -36,6 +43,6 @@ class CreateBvnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bvns');
+        Schema::dropIfExists('ads');
     }
 }

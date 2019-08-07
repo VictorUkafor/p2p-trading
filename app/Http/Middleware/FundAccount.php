@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Mode\Bank;
+use App\Model\Bank;
 use Closure;
 use Validator;
 
-class ValidateBVN
+class FundAccount
 {
     /**
      * Handle an incoming request.
@@ -17,8 +17,9 @@ class ValidateBVN
      */
     public function handle($request, Closure $next)
     {
+
         $validator = Validator::make($request->all(), [
-            'bvn_number' => 'required|numeric|exists:banks,bvn',
+            'amount' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -28,16 +29,17 @@ class ValidateBVN
             ], 400);
         } 
 
+        $accountNumber = $request->route('accountNumber');
 
-        $bvn = Bank::where('bvn', $request->bvn_number)->first();
+        $account = Bank::where('account_number', $accountNumber)->first();
 
-        if(!$bvn){
+        if(!$account){
             return response()->json([
-                'errorMessage' => 'Invalid bvn'
-            ], 400); 
+                'errorMessage' => 'Account can not be found',
+            ]   , 404); 
         }
 
-        $request->phone = $bvn->phone;
+        $request->account = $account;
         return $next($request);
     }
 }

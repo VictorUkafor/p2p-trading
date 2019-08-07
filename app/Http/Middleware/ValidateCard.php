@@ -6,7 +6,7 @@ use App\Model\Bank;
 use Closure;
 use Validator;
 
-class ValidateBuy
+class ValidateCard
 {
     /**
      * Handle an incoming request.
@@ -18,12 +18,6 @@ class ValidateBuy
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'coin' => 'required|in:BTC,LTC,ETH',
-            'price_type' => 'required|in:static,dynamic',
-            'price' => 'required|numeric',
-            'min' => 'required|numeric',
-            'max' => 'required|numeric',
-            'deadline' => 'required|numeric',
             'card' => 'required|numeric',
         ]);
 
@@ -34,12 +28,6 @@ class ValidateBuy
             ], 400);
         } 
 
-        if($request->max < $request->min){
-            return response()->json([
-                'errorMessage' => 'Max must be greater than Min'
-            ], 400);
-        }
-
         $account = Bank::where('card', $request->card)->first();
 
         if(!$account){
@@ -48,12 +36,7 @@ class ValidateBuy
             ], 404);
         }
 
-        if(($request->max * $request->price) > $account->balance){
-            return response()->json([
-                'errorMessage' => 'Insufficient fund'
-            ], 401);
-        }
-
+        
         $request->account = $account;
         return $next($request);
     }

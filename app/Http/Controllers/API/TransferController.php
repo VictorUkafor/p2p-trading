@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Model\User;
-use App\Model\Commission;
+use App\Model\Fee;
 use App\Model\Transfer;
 use App\Model\WalletAddress;
 use Illuminate\Http\Request;
@@ -76,23 +76,7 @@ class TransferController extends Controller {
 
     public function fundWithUsername(Request $request) {
 
-        $commissionRate = null;
-        switch ($request->coin) {
-            case 'BTC':
-            $commissionRate = config('p2p.btc_transfer_commission_rate');
-            break;
-            case 'LTC':
-            $commissionRate = config('p2p.ltc_transfer_commission_rate');
-            break;
-            case 'ETH':
-            $commissionRate = config('p2p.eth_transfer_commission_rate');
-            break;
-            default:
-            $commissionRate = null;
-        } 
-
-        $coin_commission = $request->amount * $commissionRate;
-        $total_coin = $request->amount + $coin_commission;
+        $total_coin = $request->amount + ($request->amount * 0.4);
 
         $senderWallet = $request->user->wallet;
 
@@ -103,10 +87,10 @@ class TransferController extends Controller {
         }
 
 
-        $commission = new Commission;
-        $commission->amount = $coin_commission;
-        $commission->status = 'completed';
-        $commission->save();
+        $fee = new Fee;
+        $fee->amount = $request->amount * 0.4;
+        $fee->status = 'completed';
+        $fee->save();
 
         $receiver = User::where('email', $request->username)->first();
         $receiverWallet = $receiver->wallet;
@@ -115,7 +99,7 @@ class TransferController extends Controller {
         $receiverWallet[$request->coin] += $request->amount;
 
         $transfer = new Transfer;
-        $transfer->commission_id = $commission->id;
+        $transfer->fee_id = $fee->id;
         $transfer->method = 'username';
         $transfer->amount = $request->amount;
         $transfer->coin = $request->coin;
@@ -128,12 +112,12 @@ class TransferController extends Controller {
 
             if(!$request->user->notifications || 
             $request->user->notifications->email_notification){
-                $request->user->notify(new SendCoin($transfer, $commission)); 
+                $request->user->notify(new SendCoin($transfer, $fee)); 
             }
 
             if(!$receiverWallet->user->notifications || 
             $receiverWallet->user->notifications->email_notification){
-                $receiverWallet->user->notify(new ReceiveCoin($transfer, $commission)); 
+                $receiverWallet->user->notify(new ReceiveCoin($transfer, $fee)); 
             }
 
             return response()->json([
@@ -150,23 +134,7 @@ class TransferController extends Controller {
 
     public function fundWithAddress(Request $request) {
 
-        $commissionRate = null;
-        switch ($request->coin) {
-            case 'BTC':
-            $commissionRate = config('p2p.btc_transfer_commission_rate');
-            break;
-            case 'LTC':
-            $commissionRate = config('p2p.ltc_transfer_commission_rate');
-            break;
-            case 'ETH':
-            $commissionRate = config('p2p.eth_transfer_commission_rate');
-            break;
-            default:
-            $commissionRate = null;
-        } 
-
-        $coin_commission = $request->amount * $commissionRate;
-        $total_coin = $request->amount + $coin_commission;
+        $total_coin = $request->amount + ($request->amount * 0.4);
 
         $senderWallet = $request->user->wallet;
 
@@ -187,17 +155,17 @@ class TransferController extends Controller {
             ], 401);
         }
         
-        $commission = new Commission;
-        $commission->amount = $coin_commission;
-        $commission->status = 'completed';
-        $commission->save();
+        $fee = new Fee;
+        $fee->amount = $request->amount * 0.4;
+        $fee->status = 'completed';
+        $fee->save();
 
         $address->balance += $request->amount;
         $address->wallet[$request->coin] += $request->amount;
         $senderWallet[$request->coin] -= $total_coin;
 
         $transfer = new Transfer;
-        $transfer->commission_id = $commission->id;
+        $transfer->fee_id = $fee->id;
         $transfer->method = 'address';
         $transfer->amount = $request->amount;
         $transfer->coin = $request->coin;
@@ -210,12 +178,12 @@ class TransferController extends Controller {
 
             if(!$request->user->notifications || 
             $request->user->notifications->email_notification){
-                $request->user->notify(new SendCoin($transfer, $commission)); 
+                $request->user->notify(new SendCoin($transfer, $fee)); 
             }
 
             if(!$address->wallet->user->notifications || 
             $address->wallet->user->notifications->email_notification){
-                $address->wallet->user->notify(new ReceiveCoin($transfer, $commission)); 
+                $address->wallet->user->notify(new ReceiveCoin($transfer, $fee)); 
             }
 
             return response()->json([

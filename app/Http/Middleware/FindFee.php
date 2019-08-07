@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Model\Commission;
+use App\Model\Fee;
 
-class FindCommission
+class FindFee
 {
     /**
      * Handle an incoming request.
@@ -16,33 +16,36 @@ class FindCommission
      */
     public function handle($request, Closure $next)
     {
-        $commissionIds = [];
+        $feeIds = [];
         
-        $sales = $request->user->wallet->sales;
+        $clients = $request->user->clients;
         $transfers = $request->user->wallet->transfers;
 
-        foreach($sales as $sale){
-            $commissionIds[] = $sale->commission->id;
+        foreach($clients as $client){
+            if($client->transaction->fee){
+               $feeIds[] = $client->transaction->fee->id; 
+            }
+            
         }
 
         foreach($transfers as $transfer){
-            $commissionIds[] = $transfer->commission->id;
+            $feeIds[] = $transfer->fee->id;
         }
 
-        $id = $request->route('commissionId');
+        $id = $request->route('feeId');
         $adminEmail = config('p2p.admin_email');
 
-        $commission = Commission::find($id);         
+        $fee = Fee::find($id);         
         
 
-        if(in_array($id, $commissionIds) || $request->user->email === $adminEmail){
-            $request->commission = $commission;
+        if(in_array($id, $feeIds) || $request->user->email === $adminEmail){
+            $request->fee = $fee;
             return $next($request);; 
         }
 
 
         return response()->json([
-            'errorMessage' => 'Commission not found',
+            'errorMessage' => 'Fee not found',
         ], 404);
 
     }

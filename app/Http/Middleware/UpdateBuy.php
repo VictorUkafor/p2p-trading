@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Mode\Bank;
 use Closure;
 use Validator;
 
-class ValidateBVN
+class UpdateBuy
 {
     /**
      * Handle an incoming request.
@@ -18,7 +17,9 @@ class ValidateBVN
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'bvn_number' => 'required|numeric|exists:banks,bvn',
+            'min' => 'numeric',
+            'max' => 'numeric',
+            'deadline' => 'numeric',
         ]);
 
         if ($validator->fails()) {
@@ -28,16 +29,13 @@ class ValidateBVN
             ], 400);
         } 
 
-
-        $bvn = Bank::where('bvn', $request->bvn_number)->first();
-
-        if(!$bvn){
+        if($request->max < $request->min){
             return response()->json([
-                'errorMessage' => 'Invalid bvn'
-            ], 400); 
+                'errorMessage' => 'Max must be greater than Min'
+            ], 400);
         }
 
-        $request->phone = $bvn->phone;
+
         return $next($request);
     }
 }

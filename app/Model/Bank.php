@@ -5,30 +5,27 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Bvn extends Model
+class Bank extends Model
 {
-
     use SoftDeletes;
     
     protected $fillable = [
         'user_id',
-        'bvn_number',
-        'verified',
-        'otp_code'
+        'account_number',
+        'account_name',
+        'date_of_birth',
+        'card',
+        'bank',
+        'phone',
+        'balance',
+        'bvn',
     ];
-
-
-    protected $hidden = [
-        'otp_code',
-    ];
-
 
     /**
-     * Get the user of the bvn.
+     * Get the user of the bank.
      */
     public function user()
     {
         return $this->belongsTo('App\Model\User');
-    }
-
+    } 
 }

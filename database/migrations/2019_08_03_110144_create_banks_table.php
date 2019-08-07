@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBvnsTable extends Migration
+class CreateBanksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,22 @@ class CreateBvnsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bvns', function (Blueprint $table) {
+        Schema::create('banks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable();
-            $table->string('bvn_number');
-            $table->boolean('verified')->default(false);
-            $table->integer('otp_code')->nullable();
+            $table->string('account_number');
+            $table->string('account_name');
+            $table->string('date_of_birth');
+            $table->string('bvn');
+            $table->string('bank');
+            $table->string('card');
+            $table->string('phone');
+            $table->string('balance');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::table('bvns', function($table) {
+        Schema::table('banks', function($table) {
             $table->foreign('user_id')->references('id')
             ->on('users')->onDelete('cascade');
         });
@@ -36,6 +41,6 @@ class CreateBvnsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bvns');
+        Schema::dropIfExists('banks');
     }
 }

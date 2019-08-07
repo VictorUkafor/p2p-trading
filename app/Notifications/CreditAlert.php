@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SellingCryptoCancel extends Notification
+class CreditAlert extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class SellingCryptoCancel extends Notification
      *
      * @return void
      */
-    public function __construct($user, $sell)
+    public function __construct($account, $amount)
     {
-        $this->user = $user;
-        $this->sell = $sell;
+        $this->account = $account;
+        $this->amount = $amount;
     }
 
     /**
@@ -42,13 +42,14 @@ class SellingCryptoCancel extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('Cancellation of transaction')
-        ->greeting('Hello '.$this->user->first_name.' '.$this->user->last_name)
-        ->line('We are sorry to inform you that the selling of '.
-        round($this->sell->value, 10, PHP_ROUND_HALF_UP).$this->sell->cryptocurrency.
-        ' could not be processed at this time and your account refunded'.
-        '. You can reachout to us for more info or better still make another transaction.')
-        ->line('We are so sorry for any inconviences and we highly appreciate your patronage!');
+        ->subject('Credit of N'.$this->amount)
+        ->greeting('Hello '.$this->account->account_name)
+        ->line('This is to notify you of a credit transaction to your account.')
+        ->line('Account Number: '.$this->account->account_number)
+        ->line('Bank: '.$this->account->bank)
+        ->line('Amount: N'.$this->amount)
+        ->line('Account Balance: N'.$this->account->balance)
+        ->line('Thank you for patronizing us!');
     }
 
     /**
