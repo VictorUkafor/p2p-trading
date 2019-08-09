@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use JWTAuth;
+use Illuminate\Support\Facades\Session;
 use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\EmailConfirmation;
 use App\Notifications\AccountActivate;
 use Illuminate\Support\Facades\Hash;
+use therealsmat\Ebulksms\EbulkSMS;
+use PragmaRX\Google2FAQRCode\Google2FA;
 
 
 class UserController extends Controller {
@@ -54,6 +57,7 @@ class UserController extends Controller {
             $user->first_name = strtolower($request->first_name);
             $user->last_name = strtolower($request->last_name);
             $user->date_of_birth = $request->date_of_birth;
+            $user->two_factor = 'unset';
             $user->password = Hash::make($request->password);
             $user->save();
 
@@ -74,7 +78,56 @@ class UserController extends Controller {
     }
 
 
-    public function login(Request $request){
+    static function twoFactorWithSMS($user, $sms){
+        $otp = mt_rand(100000, 666666);
+
+        $user->sms2fa_otp = $otp;
+
+        $sms->fromSender('P2P TRADING')
+        ->composeMessage($otp." is your login code")
+        ->addRecipients($user->phone)->send();
+
+        
+        if($user->save()){
+            return response()->json([
+                'successMessage' => 'An sms has been sent to your phone',
+                'otp' => $otp,
+            ], 200);   
+        }
+
+        return response()->json([
+            'errorMessage' => 'Internal server error'
+        ], 500);
+    }
+
+
+    static function twoFactorWithGoogle($user){
+        
+        $google2fa = new Google2FA();
+        
+        $google2fa_qr = $google2fa->getQRCodeInline(
+           config('app.name'),
+           $user->email,
+           $user->google2fa_secret
+        );
+        
+        if($google2fa_qr){
+            return response()->json([
+                'qrCode' => $google2fa_qr,
+                'successMessage' => 'Scan the QrCode with Google Authenticator to grab the OTP', 
+                'instruction' => 'copy the qrcode and paste it in a browser'
+            ], 200);  
+        }
+            
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
+        
+    }
+
+
+
+    public function login(Request $request, EbulkSMS $sms){
 
         $user = User::where('email', $request->email)->first();
 
@@ -85,6 +138,8 @@ class UserController extends Controller {
         ];
         
         $token = JWTAuth::attempt($credentials);
+
+        $auth = ['token' => $token, 'email' => $user->email,];
     
         try {
     
@@ -102,10 +157,86 @@ class UserController extends Controller {
             ], 500);
         }
     
+        
+        if($user->two_fa === 'google'){
+            session(['auth' => $auth]);
+            return $this->twoFactorWithGoogle($user);
+        }
+
+        if($user->two_fa === 'sms'){
+            session(['auth' => $auth]);
+            return $this->twoFactorWithSMS($user, $sms);
+        }
+
         return response()->json([
-            'token' => $token
-        ], 201);
+            'token' => $token,
+        ], 200);
     
+    }
+    
+
+
+    public function loginWithSMS(Request $request){
+        $auth = session('auth');
+
+        if(!$auth){
+            return response()->json([
+                'errorMessage' => 'Please login',
+                'auth'=> session('auth')
+            ], 401);
+        }
+
+
+        $user = User::where('email', $auth['email'])->first();
+
+        if(!$user || $user->sms2fa_otp != $request->otp){
+            return response()->json([
+                'errorMessage' => 'Invalid OTP',
+            ], 400);
+        }
+
+        $user->sms2fa_otp = null;
+
+        if($user->save()){
+            Session::forget('auth');
+            return response()->json([
+                'token' => $auth['token'],
+            ], 200);
+        }
+
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500);
+
+    }
+
+
+    public function loginWithGoogle(Request $request){
+        $auth = session('auth');
+
+        if(!$auth){
+            return response()->json([
+                'errorMessage' => 'Please login',
+            ], 401);
+        }
+
+        $google2fa = new Google2FA();
+        
+        $user = User::where('email', $auth['email'])->first();
+                
+        $valid = $google2fa->verifyKey($user->google2fa_secret, $request->otp);
+
+        if(!$user || !$valid){
+            return response()->json([
+                'errorMessage' => 'Invalid OTP',
+            ], 400);
+        }
+        
+        Session::forget('auth');
+        return response()->json([
+            'token' => $auth['token'],
+        ], 200);
+
     }
 
 

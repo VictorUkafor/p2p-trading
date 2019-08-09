@@ -28,6 +28,9 @@ class User extends Authenticatable implements JWTSubject
         'date_of_birth',
         'active',
         'activation_token',
+        'google2fa_secret',
+        'sms2fa_otp',
+        'two_fa',
     ];
 
     /**
@@ -39,7 +42,24 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
         'activation_token',
+        'google2fa_secret',
     ];
+
+    public function setGoogle2faSecretAttribute($value)
+    {
+        $this->attributes['google2fa_secret'] = encrypt($value);
+    }
+
+    /**
+     * Decrypt the user's google_2fa secret.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getGoogle2faSecretAttribute($value)
+    {
+        return $value ? decrypt($value) : "";
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

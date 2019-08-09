@@ -6,12 +6,16 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "bacon/bacon-qr-code": "1.0.0",
         "jrm2k6/cloudder": "^0.6.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "nesbot/carbon": "~1.0",
+        "pragmarx/google2fa": "^5.0",
+        "pragmarx/google2fa-qrcode": "^1.0",
         "therealsmat/laravel-ebulksms": "^1.0",
-        "tymon/jwt-auth": "^1.0.0-rc.2"
+        "tymon/jwt-auth": "^1.0.0-rc.2",
+        "zircote/swagger-php": "^3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
