@@ -13,6 +13,25 @@ use App\Notifications\ReceiveCoin;
 
 class TransferController extends Controller {
 
+    /**
+     * @SWG\Post(
+     *     path="/api/v1/addresses",
+     *     tags={"wallet address"},
+     *     summary="Engages an ad",
+     *     description="Engages an ad",
+     *     @SWG\Parameter(
+     *         name="coin",
+     *         in="query",
+     *         description="The cryptocurrency coin",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(response=201, description="Operation successfull"),
+     *     @SWG\Response(response=500, description="Internal server error"),
+     *     @SWG\Response(response=400, description="Invalid input field")
+     * )
+     */ 
+
     public function generateAddress(Request $request) {
         
         $address = new WalletAddress;
@@ -31,6 +50,25 @@ class TransferController extends Controller {
             'errorMessage' => 'Internal server error',
         ], 500);
     }
+
+
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/addresses",
+     *     tags={"wallet address"},
+     *     summary="view user addresses",
+     *     description="This return an array of all 
+     *     the wallet addresses of a user",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
 
     public function addresses(Request $request) {
@@ -56,6 +94,24 @@ class TransferController extends Controller {
     }
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/addresses/{address}",
+     *     tags={"wallet address"},
+     *     summary="view a wallet address",
+     *     description="This return the details of a single wallet address",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
     public function address($address) {
         
         $address = WalletAddress::where('address', $address)
@@ -72,6 +128,49 @@ class TransferController extends Controller {
         ], 200);            
 
     }
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/addresses/fund-with-username",
+     *     tags={"wallet address"},
+     *     summary="Fund a wallet",
+     *     description="Fund a wallet using user's email",
+     *     @SWG\Parameter(
+     *         name="coin",
+     *         in="query",
+     *         description="The cryptocurrency coin",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="amount",
+     *         in="query",
+     *         description="The amount of coins to be funded",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="The email address of the receiver",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response=201,
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */ 
 
 
     public function fundWithUsername(Request $request) {
@@ -130,6 +229,49 @@ class TransferController extends Controller {
         ], 500);
 
     }
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/addresses/fund-with-address",
+     *     tags={"wallet address"},
+     *     summary="Fund a wallet",
+     *     description="Fund a wallet using a wallet address",
+     *     @SWG\Parameter(
+     *         name="coin",
+     *         in="query",
+     *         description="The cryptocurrency coin",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="amount",
+     *         in="query",
+     *         description="The amount of coins to be funded",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="address",
+     *         in="query",
+     *         description="The wallet address of the receiver",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */     
 
 
     public function fundWithAddress(Request $request) {

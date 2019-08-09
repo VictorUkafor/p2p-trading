@@ -7,8 +7,46 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\CreditAlert;
 
-class BankController extends Controller
-{
+class BankController extends Controller {
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/banks",
+     *     tags={"fake bank accounts"},
+     *     summary="Creates a fake bank account",
+     *     description="Creates a fake bank account",
+     *     operationId="create",
+     *     @SWG\Parameter(
+     *         name="bank",
+     *         in="query",
+     *         description="The name of the bank",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="phone",
+     *         in="query",
+     *         description="The phone of the account owner",
+     *         required=false,
+     *         type="string"
+     *     ),    
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
+
+
     public function create(Request $request){
 
         if(!count($request->user->banks) && !$request->phone){
@@ -56,6 +94,24 @@ class BankController extends Controller
     }
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/banks",
+     *     tags={"fake bank accounts"},
+     *     summary="Fetches all fake bank accounts of a user",
+     *     description="Fetches all fake bank accounts of a user",
+     *     operationId="accounts",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
     public function accounts(Request $request){
 
         $accounts = $request->user->banks;
@@ -79,6 +135,24 @@ class BankController extends Controller
     }
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/banks/{accountNumber}",
+     *     tags={"fake bank accounts"},
+     *     summary="Fetches a single bank account of a user",
+     *     description="Fetches a single bank account of a user",
+     *     operationId="account",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
     public function account(Request $request){
 
         $account = $request->account;
@@ -95,6 +169,35 @@ class BankController extends Controller
 
     }
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/banks/{accountNumber}",
+     *     tags={"fake bank accounts"},
+     *     summary="Funds an account",
+     *     description="Funds an account",
+     *     operationId="fund",
+     *     @SWG\Parameter(
+     *         name="amount",
+     *         in="query",
+     *         description="Amount to be funded",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
     public function fund(Request $request){
 

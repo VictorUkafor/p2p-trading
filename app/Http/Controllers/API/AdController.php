@@ -6,8 +6,71 @@ use App\Model\Ad;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class AdController extends Controller
-{
+class AdController extends Controller {
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/sell",
+     *     tags={"trade ads"},
+     *     summary="Create a sell trade ad",
+     *     description="Create a sell trade ad",
+     *     operationId="createSellAd",
+     *     @SWG\Parameter(
+     *         name="coin",
+     *         in="query",
+     *         description="The cryptocurrency",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="price_type",
+     *         in="query",
+     *         description="Static or Dynamic price",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="price",
+     *         in="query",
+     *         description="The price for a coin",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="min",
+     *         in="query",
+     *         description="The minimum number of coin to be sold",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="max",
+     *         in="query",
+     *         description="The maximum number of coin to be sold",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="deadline",
+     *         in="query",
+     *         description="The deadline for the transaction after approval",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid email field"
+     *     ),
+     * )
+     */
 
     public function createSellAd(Request $request) { 
 
@@ -40,6 +103,70 @@ class AdController extends Controller
     } 
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/buy",
+     *     tags={"trade ads"},
+     *     summary="Create a buy trade ad",
+     *     description="Create a buy trade ad",
+     *     operationId="createBuyAd",
+     *     @SWG\Parameter(
+     *         name="coin",
+     *         in="query",
+     *         description="The cryptocurrency",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="price_type",
+     *         in="query",
+     *         description="Static or Dynamic price",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="price",
+     *         in="query",
+     *         description="The price for a coin",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="min",
+     *         in="query",
+     *         description="The minimum number of coin to be sold",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="max",
+     *         in="query",
+     *         description="The maximum number of coin to be sold",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="deadline",
+     *         in="query",
+     *         description="The deadline for the transaction after approval",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid email field"
+     *     ),
+     * )
+     */    
+
     public function createBuyAd(Request $request) { 
 
         $buyAd = new Ad;
@@ -69,7 +196,25 @@ class AdController extends Controller
     } 
 
 
-    public function allAds(Request $request) { 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/ads/all/trade",
+     *     tags={"trade ads"},
+     *     summary="View all public trade ads",
+     *     description="View all public trade ads",
+     *     operationId="allAds",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
+
+    public function allAds() { 
 
         $ads = Ad::where('state', 'public')->get();
 
@@ -91,6 +236,23 @@ class AdController extends Controller
 
     }  
     
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/ads",
+     *     tags={"trade ads"},
+     *     summary="View all user's trade ads",
+     *     description="View all user's trade ads",
+     *     operationId="myAds",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
 
     public function myAds(Request $request) { 
 
@@ -115,6 +277,24 @@ class AdController extends Controller
     } 
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/ads/{adId}",
+     *     tags={"trade ads"},
+     *     summary="View a trade ads",
+     *     description="View a single trade ads",
+     *     operationId="ad",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
+
     public function ad(Request $request) { 
 
         $ad = $request->ad;
@@ -136,6 +316,50 @@ class AdController extends Controller
         ], 500); 
 
     } 
+
+
+    /**
+     * @SWG\PUT(
+     *     path="/api/v1/ads/{adId}",
+     *     tags={"trade ads"},
+     *     summary="Updates a trade ads",
+     *     description="Updates a trade ads",
+     *     operationId="updateAd",
+     *     @SWG\Parameter(
+     *         name="min",
+     *         in="query",
+     *         description="The minimum number of coin to be sold",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="max",
+     *         in="query",
+     *         description="The maximum number of coin to be sold",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="deadline",
+     *         in="query",
+     *         description="The deadline for the transaction after approval",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
 
 
     public function updateAd(Request $request) { 
@@ -165,6 +389,25 @@ class AdController extends Controller
         ], 500); 
 
     } 
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/remove",
+     *     tags={"trade ads"},
+     *     summary="Removes a trade ads",
+     *     description="Removes a trade ads",
+     *     operationId="removeAd",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
 
     public function removeAd(Request $request) { 
 

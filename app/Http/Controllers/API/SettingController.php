@@ -11,6 +11,23 @@ use PragmaRX\Google2FAQRCode\Google2FA;
 class SettingController extends Controller
 {
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/settings/remove-2fa",
+     *     tags={"settings"},
+     *     summary="Removes 2FA authentication",
+     *     description="Removes 2FA authentication after login",
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */    
+
     public function turnOffTwoFactor(Request $request){
         
         $user = $request->user;
@@ -28,6 +45,25 @@ class SettingController extends Controller
         ], 500); 
 
     }
+
+
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/settings/google-2fa",
+     *     tags={"settings"},
+     *     summary="Request for 2FA with google",
+     *     description="Request for 2FA with google",
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */
+
 
     public function requestGoogle2fa(Request $request){
 
@@ -75,6 +111,23 @@ class SettingController extends Controller
     }
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/settings/sms-2fa",
+     *     tags={"settings"},
+     *     summary="Request for 2FA with sms",
+     *     description="Request for 2FA with sms",
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */    
+
     public function request2faSMS(Request $request, EbulkSMS $sms){
         
         $user = $request->user;
@@ -116,6 +169,34 @@ class SettingController extends Controller
     }
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/settings/set-sms-2fa",
+     *     summary="Set 2FA with sms",
+     *     description="Set 2FA with sms",
+     *     tags={"settings"},
+     *     @SWG\Parameter(
+     *         name="otp",
+     *         in="query",
+     *         description="The otp sent to the user's phone",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */
+
     public function setSMS2fa(Request $request){
         
         $user = $request->user;
@@ -140,6 +221,35 @@ class SettingController extends Controller
         ], 500); 
 
     }
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/settings/set-google-2fa",
+     *     summary="Set 2FA with google authenticator",
+     *     description="Set 2FA with google authenticator",
+     *     tags={"settings"},
+     *     @SWG\Parameter(
+     *         name="otp",
+     *         in="query",
+     *         description="The otp from google authenticator app",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */
 
 
     public function setGoogle2fa(Request $request){

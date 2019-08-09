@@ -14,8 +14,37 @@ use App\Model\PasswordReset;
 class PasswordResetController extends Controller
 {
 
-    public function create(Request $request)
-    {
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/password-reset/request",
+     *     summary="Request for password reset",
+     *     description="Sends link to user for password reset",
+     *     operationId="create",
+     *     tags={"password reset"},
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="The email of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */ 
+
+    public function create(Request $request){
+        
         $user = $request->user;
 
         $passwordReset = new PasswordReset;
@@ -39,14 +68,25 @@ class PasswordResetController extends Controller
 
 
     /**
-     * Find token password reset
-     *
-     * @param  [string] $token
-     * @return [string] message
-     * @return [json] passwordReset object
-     */
-    public function find($token)
-    {
+     * @SWG\GET(
+     *     path="/api/v1/auth/password-reset/find/{token}",
+     *     summary="Checks if a reset token is valid",
+     *     description="Checks if a reset token is valid for password reset",
+     *     operationId="find",
+     *     tags={"password reset"},
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
+    public function find($token) {
         $passwordReset = PasswordReset::where('token', $token)->first();
         
         if (!$passwordReset)
@@ -65,9 +105,44 @@ class PasswordResetController extends Controller
     }
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/password-reset/reset/{token}",
+     *     summary="Resets a password",
+     *     description="Resets a password",
+     *     operationId="reset",
+     *     tags={"password reset"},
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="The new password",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password_confirmation",
+     *         in="query",
+     *         description="The new password confirmation",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */ 
 
-    public function reset(Request $request, $token)
-    {
+
+    public function reset(Request $request, $token){
         $passwordReset = PasswordReset::where('token', $token)->first();
 
         if (!$passwordReset)
