@@ -54,7 +54,7 @@ class AccountController extends Controller
         }
 
 
-        $code = mt_rand(1000000, 9999999);
+        $code = mt_rand(100000, 999999);
 
         $bvn = $user->bvn;
         $bvn->bvn_number = $request->bvn_number;

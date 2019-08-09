@@ -18,14 +18,14 @@ class ValidateOTP
     {
         $user = $request->user;
 
-        if(!$user->bvn){
+        if($user && !$user->bvn){
             return response()->json([
                 'errorMessage' => 'Unauthorized action'
             ], 401);
         }
 
         $validator = Validator::make($request->all(), [
-            'otp' => 'required|numeric|digits:7',
+            'otp' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {

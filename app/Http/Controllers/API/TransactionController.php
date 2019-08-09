@@ -25,7 +25,7 @@ class TransactionController extends Controller
         $client->ad_id = $ad->id;
 
         $fee = new Fee;
-        $fee->amount = $request->amount_in_cash * 0.4;
+        $fee->amount = $request->amount_in_cash * 0.04;
 
         $saveTransaction =  false;
         if($fee->save() && $client->save()){

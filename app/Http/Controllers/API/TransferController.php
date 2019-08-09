@@ -88,7 +88,7 @@ class TransferController extends Controller {
 
 
         $fee = new Fee;
-        $fee->amount = $request->amount * 0.4;
+        $fee->amount = $request->amount * 0.04;
         $fee->status = 'completed';
         $fee->save();
 
@@ -156,7 +156,7 @@ class TransferController extends Controller {
         }
         
         $fee = new Fee;
-        $fee->amount = $request->amount * 0.4;
+        $fee->amount = $request->amount * 0.04;
         $fee->status = 'completed';
         $fee->save();
 

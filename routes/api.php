@@ -13,6 +13,7 @@
 
 Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
+
     // routes that don't require authentication
     Route::prefix('auth')->group(function () {
 
@@ -30,6 +31,14 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         // login
         Route::post('/login', 'UserController@login')
         ->middleware('validateLogin'); 
+
+        // login with sms 2fa
+        Route::post('/login-with-sms', 'UserController@loginWithSMS')
+        ->middleware('validateOTP'); 
+
+        // login with google 2fa
+        Route::post('/login-with-google', 'UserController@loginWithGoogle')
+        ->middleware('validateOTP');
 
         // Password resets routes
         Route::prefix('password-reset')->group(function () {
@@ -156,6 +165,24 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
                 // route for setting auto-logout
                 Route::post('/auto-logout', 'NotificationController@autoLogout');
+
+            });
+
+
+            // routes for settings
+            Route::prefix('settings')->group(function () {
+                
+                Route::get('/remove-2fa', 'SettingController@turnOffTwoFactor');
+
+                Route::get('/sms-2fa', 'SettingController@request2faSMS');
+
+                Route::get('/google-2fa', 'SettingController@requestGoogle2fa');
+
+                Route::post('/set-google-2fa', 'SettingController@setGoogle2fa')
+                ->middleware('validateOTP');
+
+                Route::post('/set-sms-2fa', 'SettingController@setSMS2fa')
+                ->middleware('validateOTP');
 
             });
             
@@ -292,25 +319,25 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             });
 
 
-            // routes for transfer
-            Route::prefix('transfer')->group(function () {
+            // routes for wallet addresses
+            Route::prefix('addresses')->group(function () {
             
                 // generate address
-                Route::post('/generate', 'TransferController@generateAddress')
+                Route::post('/', 'TransferController@generateAddress')
                 ->middleware('validateCoin');
 
                 // view addresses
-                Route::get('/addresses', 'TransferController@addresses');
+                Route::get('/', 'TransferController@addresses');                
+                
+                // view address
+                Route::get('/{address}', 'TransferController@address');
                 
                 // fund wallet with address
-                Route::post('/address', 'TransferController@fundWithAddress')
+                Route::post('/fund-with-address', 'TransferController@fundWithAddress')
                 ->middleware('withAddress');
-
-                // view address
-                Route::get('/address/{address}', 'TransferController@address');
             
                 // fund wallet with username
-                Route::post('/username', 'TransferController@fundWithUsername')
+                Route::post('/fund-with-username', 'TransferController@fundWithUsername')
                 ->middleware('withUsername');
             
             });

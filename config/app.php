@@ -242,6 +242,8 @@ return [
         // cloudinary
         'Cloudder' => JD\Cloudder\Facades\Cloudder::class,
 
+
+
     ],
 
 ];
