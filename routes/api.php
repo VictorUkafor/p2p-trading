@@ -319,6 +319,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             });
 
 
+            
             // routes for wallet addresses
             Route::prefix('addresses')->group(function () {
             

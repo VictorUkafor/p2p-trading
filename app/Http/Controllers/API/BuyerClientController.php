@@ -15,6 +15,25 @@ use App\Notifications\TransactionComplete;
 
 class BuyerClientController extends Controller{
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/make-payment/{clientId}",
+     *     summary="Make payment for buying coin",
+     *     description="Make payment for buying coin",
+     *     operationId="makePayment",
+     *     tags={"Selling coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
     public function makePayment(Request $request) { 
 
         $ad = $request->ad;
@@ -63,6 +82,25 @@ class BuyerClientController extends Controller{
     } 
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/reject-payment/{clientId}",
+     *     summary="Rejects the payment for a transaction",
+     *     description="Rejects the payment for a transaction",
+     *     operationId="declinePayment",
+     *     tags={"Selling coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
     public function declinePayment(Request $request) { 
 
         $ad = $request->ad;
@@ -101,6 +139,24 @@ class BuyerClientController extends Controller{
 
     } 
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/confirm-payment/{clientId}",
+     *     summary="Confirms the payment for a transaction",
+     *     description="Confirms the payment for a transaction",
+     *     operationId="confirmPayment",
+     *     tags={"Selling coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
     public function confirmPayment(Request $request) { 
 
@@ -152,6 +208,24 @@ class BuyerClientController extends Controller{
 
     } 
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/refund-payment/{clientId}",
+     *     summary="Refunds the payment of a rejected transaction",
+     *     description="Refunds the payment of a rejected transaction",
+     *     operationId="refundPayment",
+     *     tags={"Selling coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
     public function refundPayment(Request $request) { 
 

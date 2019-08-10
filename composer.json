@@ -1,23 +1,31 @@
 {
     "name": "victorukafor/p2p-trading",
     "description": "peer to peer trading",
-    "keywords": ["API", "jwt", "php", "cryptocurrency"],
+    "keywords": [
+        "API",
+        "jwt",
+        "php",
+        "cryptocurrency"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": ">=5.6.4",
         "bacon/bacon-qr-code": "1.0.0",
+        "darkaonline/l5-swagger": "5.5.8.3",
         "jrm2k6/cloudder": "^0.6.0",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5",
         "laravel/tinker": "~1.0",
-        "nesbot/carbon": "~1.0",
+        "nesbot/carbon": "1.20",
         "pragmarx/google2fa": "^5.0",
         "pragmarx/google2fa-qrcode": "^1.0",
+        "symfony/translation": "~2.6",
         "therealsmat/laravel-ebulksms": "^1.0",
         "tymon/jwt-auth": "^1.0.0-rc.2",
-        "zircote/swagger-php": "^3.0"
+        "zircote/swagger-php": "~2.0"
     },
     "require-dev": {
+        "composer/composer": "^1.9",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.7"

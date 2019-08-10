@@ -9,6 +9,24 @@ use App\Http\Controllers\Controller;
 
 class WalletController extends Controller
 {
+
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/wallet",
+     *     tags={"wallet"},
+     *     summary="displays a user wallet",
+     *     description="Displays the content of a user wallet",   
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */      
+
     public function wallet(Request $request) { 
 
         $wallet = $request->user->wallet;

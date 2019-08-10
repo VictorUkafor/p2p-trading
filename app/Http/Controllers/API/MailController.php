@@ -8,8 +8,59 @@ use App\Http\Controllers\Controller;
 use JD\Cloudder\Facades\Cloudder;
 
 
-class MailController extends Controller
-{
+class MailController extends Controller {
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/mail-us",
+     *     summary="Sends email to the admin",
+     *     description="Sends email to the admin for special actions",
+     *     operationId="create",
+     *     tags={"mail"},
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="query",
+     *         description="The name of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="The email of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="subject",
+     *         in="query",
+     *         description="The subject of the email",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="message",
+     *         in="query",
+     *         description="The message of the email",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */  
+
     public function create(Request $request){
         try{
 

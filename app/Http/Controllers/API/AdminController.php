@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller {
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/admin",
+     *     summary="Register the admin",
+     *     description="Register the admin using data from environment variables",
+     *     operationId="signup",
+     *     tags={"admin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input fields"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */  
+
+
     public function signup() { 
 
         $email = config('p2p.admin_email');
@@ -44,6 +67,24 @@ class AdminController extends Controller {
 
     }
 
+
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/admin",
+     *     summary="Fetches admin profile",
+     *     description="Fetches admin profile",
+     *     operationId="profile",
+     *     tags={"admin"},
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
     public function profile(Request $request) { 
 

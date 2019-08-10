@@ -186,6 +186,8 @@ return [
         // cloudinary
         JD\Cloudder\CloudderServiceProvider::class,
 
+        L5Swagger\L5SwaggerServiceProvider::class,
+
     ],
 
     /*

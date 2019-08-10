@@ -15,6 +15,42 @@ use App\Notifications\TradeDecline;
 class TransactionController extends Controller
 {
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/engage",
+     *     tags={"trade ads"},
+     *     summary="Engages a client with a trade",
+     *     description="Engages a client with a trade",
+     *     @SWG\Parameter(
+     *         name="amount_in_coin",
+     *         in="query",
+     *         description="The cryptocurrency number",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="amount_in_amount",
+     *         in="query",
+     *         description="The naira equivalent of a coin",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
+
     public function engageAd(Request $request) { 
 
         $user = $request->user;
@@ -57,6 +93,23 @@ class TransactionController extends Controller
 
     } 
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/approve/{clientId}",
+     *     tags={"trade ads"},
+     *     summary="User approves a client",
+     *     description="User approves a client",
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
     
     public function approveTrade(Request $request) { 
 
@@ -89,6 +142,23 @@ class TransactionController extends Controller
 
     } 
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/decline/{clientId}",
+     *     tags={"trade ads"},
+     *     summary="User declines a transaction",
+     *     description="User decline a transaction",
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
 
     public function declineTrade(Request $request) { 
 

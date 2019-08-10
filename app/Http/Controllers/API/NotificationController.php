@@ -7,8 +7,28 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 
-class NotificationController extends Controller
-{
+class NotificationController extends Controller {
+
+
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/notifications",
+     *     summary="Returns notifications settings",
+     *     description="Returns notifications settings",
+     *     operationId="notifications",
+     *     tags={"notifications"},
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
     public function notifications(Request $request){
 
         $notifications = $request->user->notifications;
@@ -24,6 +44,25 @@ class NotificationController extends Controller
         ], 404); 
 
     }
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/notifications/push",
+     *     summary="Set push notification",
+     *     description="Set push notification",
+     *     operationId="push",
+     *     tags={"notifications"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
 
 
     public function push(Request $request){
@@ -55,6 +94,25 @@ class NotificationController extends Controller
     }
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/notifications/email",
+     *     summary="Set email notification",
+     *     description="Set email notification",
+     *     operationId="email",
+     *     tags={"notifications"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */    
+
+
     public function email(Request $request){
 
         $notification = $request->user->notifications;
@@ -80,6 +138,24 @@ class NotificationController extends Controller
 
     }
 
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/notifications/auto-logout",
+     *     summary="Set auto logout",
+     *     description="Set auto logout",
+     *     operationId="autoLogout",
+     *     tags={"notifications"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
 
     public function autoLogout(Request $request){
 

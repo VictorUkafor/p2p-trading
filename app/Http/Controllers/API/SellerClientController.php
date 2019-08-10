@@ -13,6 +13,26 @@ use App\Notifications\BalanceRefund;
 
 class SellerClientController extends Controller {
 
+    
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/deposit-coin/{clientId}",
+     *     summary="Deposits coin for transaction",
+     *     description="Deposits coin for transaction",
+     *     operationId="depositCoin",
+     *     tags={"buying coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
     public function depositCoin(Request $request) { 
 
         $ad = $request->ad;
@@ -64,6 +84,25 @@ class SellerClientController extends Controller {
     } 
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/decline-coin/{clientId}",
+     *     summary="Declines transaction",
+     *     description="Declines transaction after coin has been deposited",
+     *     operationId="declineCoin",
+     *     tags={"buying coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
+
     public function declineCoin(Request $request) { 
 
         $ad = $request->ad;
@@ -101,6 +140,25 @@ class SellerClientController extends Controller {
         ], 500); 
 
     } 
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/confirm-deposit/{clientId}",
+     *     summary="Comfirms transaction",
+     *     description="Accept transaction after coin has been deposit",
+     *     operationId="confirmDeposit",
+     *     tags={"buying coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
 
 
     public function confirmDeposit(Request $request) { 
@@ -147,6 +205,24 @@ class SellerClientController extends Controller {
     } 
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/refund-coin/{clientId}",
+     *     summary="Refund coin",
+     *     description="Refund coin after transaction has been declined",
+     *     operationId="refundCoin",
+     *     tags={"buying coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */  
+
     public function refundCoin(Request $request) { 
 
         $ad = $request->ad;
@@ -178,6 +254,25 @@ class SellerClientController extends Controller {
         ], 500); 
 
     }     
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/ads/{adId}/refund-balance/{clientId}",
+     *     summary="Refund balance",
+     *     description="Refund buyer's cash balance after transaction",
+     *     operationId="refundBalance",
+     *     tags={"buying coin"},
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */  
 
 
     public function refundBalance(Request $request) { 

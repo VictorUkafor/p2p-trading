@@ -15,6 +15,39 @@ use PragmaRX\Google2FAQRCode\Google2FA;
 
 
 class UserController extends Controller {
+    
+    /**
+     * @SWG\Info(title="P2P Trading API", version="1.00")
+     */
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/register",
+     *     tags={"user"},
+     *     summary="Create a user",
+     *     description="Create a user and send a link for verification",
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="The email of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid email field"
+     *     ),
+     * )
+     */
+
 
     public function signup(Request $request) { 
 
@@ -45,6 +78,63 @@ class UserController extends Controller {
         ], 500); 
 
     }
+
+
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/account-activation/{token}",
+     *     summary="Activates user account",
+     *     description="Complete user registration after email verification",
+     *     tags={"user"},
+     *     @SWG\Parameter(
+     *         name="first_name",
+     *         in="query",
+     *         description="The first name of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="last_name",
+     *         in="query",
+     *         description="The last name of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="date_of_birth",
+     *         in="query",
+     *         description="The date of birth of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="The password of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password_confirmation",
+     *         in="query",
+     *         description="The password confirmation  of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */    
 
 
     public function signupComplete(Request $request){
@@ -126,6 +216,41 @@ class UserController extends Controller {
     }
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/login",
+     *     tags={"user"},
+     *     summary="login a user",
+     *     description="This logins an activation user after entering email and password",
+     *     @SWG\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="The email of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="The password of the user",
+     *         required=true,
+     *         type="string"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input fields"
+     *     ),
+     * )
+     */  
+
 
     public function login(Request $request, EbulkSMS $sms){
 
@@ -175,6 +300,34 @@ class UserController extends Controller {
     }
     
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/login-with-sms",
+     *     tags={"user"},
+     *     summary="login a using sms 2fa",
+     *     description="This logs in a user after entering the OTP send to their phone",
+     *     @SWG\Parameter(
+     *         name="otp",
+     *         in="query",
+     *         description="The OTP for 2FA",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response=201,
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response=400,
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */  
+
 
     public function loginWithSMS(Request $request){
         $auth = session('auth');
@@ -211,6 +364,34 @@ class UserController extends Controller {
     }
 
 
+    /**
+     * @SWG\POST(
+     *     path="/api/v1/auth/login-with-google",
+     *     tags={"user"},
+     *     summary="login a using 2fa with google authenticator",
+     *     description="This logs in a user after entering the OTP from google QR code",
+     *     @SWG\Parameter(
+     *         name="otp",
+     *         in="query",
+     *         description="The OTP for 2FA",
+     *         required=true,
+     *         type="integer"
+     *     ),
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     * )
+     */ 
+
     public function loginWithGoogle(Request $request){
         $auth = session('auth');
 
@@ -240,6 +421,23 @@ class UserController extends Controller {
     }
 
 
+    /**
+     * @SWG\GET(
+     *     path="/api/v1/profile",
+     *     tags={"user"},
+     *     summary="display a user profile",
+     *     description="Displays the logged in user profile",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */ 
+
     public function profile(Request $request){
 
         $user = $request->user;
@@ -255,6 +453,42 @@ class UserController extends Controller {
         ], 200);
 
     }
+
+
+    /**
+     * @SWG\PUT(
+     *     path="/api/v1/profile",
+     *     tags={"user"},
+     *     summary="updates a user profile",
+     *     description="Displays the logged in user profile",
+     *     @SWG\Parameter(
+     *         name="first_name",
+     *         in="query",
+     *         description="First Name of the user",
+     *         required=false,
+     *         type="string"
+     *     ),
+     *     @SWG\Parameter(
+     *         name="last_name",
+     *         in="query",
+     *         description="Last Name of the user",
+     *         required=false,
+     *         type="string"
+     *     ),    
+     *     @SWG\Response(
+     *         response="201",
+     *         description="Operation successfull"
+     *     ),
+     *     @SWG\Response(
+     *         response="400",
+     *         description="Invalid input field"
+     *     ),
+     *     @SWG\Response(
+     *         response="500",
+     *         description="Internal server error"
+     *     ),
+     * )
+     */     
 
 
     public function update(Request $request){
