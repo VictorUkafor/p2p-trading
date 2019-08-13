@@ -17,8 +17,8 @@ class TransferController extends Controller {
      * @SWG\Post(
      *     path="/api/v1/addresses",
      *     tags={"wallet address"},
-     *     summary="Engages an ad",
-     *     description="Engages an ad",
+     *     summary="Generate a wallet address",
+     *     description="Generate a wallet address",
      *     @SWG\Parameter(
      *         name="coin",
      *         in="query",

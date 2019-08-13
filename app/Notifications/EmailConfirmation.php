@@ -18,7 +18,6 @@ class EmailConfirmation extends Notification
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -40,7 +39,8 @@ class EmailConfirmation extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = 'http://localhost:3000/account-confirmation?token='.$notifiable->activation_token;
+        $frontend_url = config('p2p.frontend_url');
+        $url = $frontend_url.'/account-activation/'.$notifiable->activation_token;
 
         return (new MailMessage)
                     ->subject('Please confirm your account')
@@ -48,7 +48,7 @@ class EmailConfirmation extends Notification
                     ->line('Thank you for your interest to signup at P2P Trading. 
                     Please before you proceed, we would want you to confirm
                     your account.')
-                    ->action('Click here to confirm your account', url($url))
+                    ->action('Click here to confirm your account', $url)
                     ->line('Thank you for using our application!');
     }
 

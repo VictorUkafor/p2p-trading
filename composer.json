@@ -12,6 +12,7 @@
     "require": {
         "php": ">=5.6.4",
         "bacon/bacon-qr-code": "1.0.0",
+        "barryvdh/laravel-cors": "^0.11.3",
         "darkaonline/l5-swagger": "5.5.8.3",
         "jrm2k6/cloudder": "^0.6.0",
         "laravel/framework": "5.5",

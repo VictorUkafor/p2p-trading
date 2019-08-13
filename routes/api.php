@@ -24,6 +24,9 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         Route::post('/register', 'UserController@signup')
         ->middleware('validateEmail'); 
 
+        // find activation token
+        Route::get('/find-token/{token}', 'UserController@findActivationToken'); 
+
         // sign up activation
         Route::post('/account-activation/{token}', 'UserController@signupComplete')
         ->middleware('validateSignup'); 

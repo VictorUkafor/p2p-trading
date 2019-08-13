@@ -59,7 +59,6 @@ class UserController extends Controller {
             ], 400); 
         }
 
-
         $user = new User;
         $user->email = $request->email;
         $user->activation_token = str_random(60);
@@ -136,9 +135,24 @@ class UserController extends Controller {
      * )
      */    
 
+    public function findActivationToken($token){
+            
+        $user = User::where('activation_token', $token)->first();        
+
+        if(!$user){            
+            return response()->json([
+                'errorMessage' => 'Invalid token',
+            ], 400);
+        }
+
+        return response()->json([
+            'successMessage' => 'User exist',
+        ], 200); 
+
+}
+
 
     public function signupComplete(Request $request){
-        try{
             
             $user = $request->user;
             
@@ -147,23 +161,22 @@ class UserController extends Controller {
             $user->first_name = strtolower($request->first_name);
             $user->last_name = strtolower($request->last_name);
             $user->date_of_birth = $request->date_of_birth;
-            $user->two_factor = 'unset';
+            $user->two_fa = 'unset';
             $user->password = Hash::make($request->password);
-            $user->save();
+            
 
-            $user->notify(new AccountActivate($user));
-            
+            if($user->save()){
+                $user->notify(new AccountActivate($user));
+                
+                return response()->json([
+                    'successMessage' => 
+                    'Your account has been activated successfully. Please login',
+                ], 201);
+            }
+
             return response()->json([
-                'successMessage' => 
-                'Your account has been activated successfully. Please login',
-            ]   , 201);
-        
-        } catch(Exception $e) {
-            
-            return response()->json([
-                'errorMessage' => $e->getMessage(),
-            ]   , 500); 
-        }
+                'errorMessage' => 'Internal server error',
+            ], 500); 
 
     }
 
@@ -263,8 +276,6 @@ class UserController extends Controller {
         ];
         
         $token = JWTAuth::attempt($credentials);
-
-        $auth = ['token' => $token, 'email' => $user->email,];
     
         try {
     
@@ -282,6 +293,7 @@ class UserController extends Controller {
             ], 500);
         }
     
+        $auth = ['token' => $token, 'email' => $user->email,];
         
         if($user->two_fa === 'google'){
             session(['auth' => $auth]);

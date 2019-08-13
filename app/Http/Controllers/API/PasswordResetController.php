@@ -51,13 +51,13 @@ class PasswordResetController extends Controller
         $passwordReset->email = $user->email;
         $passwordReset->token = str_random(60);
         
-        if ($user && $passwordReset->save()){
+        if ($passwordReset->save()){
             $user->notify(new PasswordResetRequest($passwordReset->token));
             
             return response()->json([
                 'successMessage' => 
                 'We have e-mailed your password reset link!'
-                ]);
+                ], 201);
             }
             
             return response()->json([
