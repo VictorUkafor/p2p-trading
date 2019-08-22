@@ -453,6 +453,7 @@ class UserController extends Controller {
     public function profile(Request $request){
 
         $user = $request->user;
+        $user->bvn = $user->bvn;
         
         if(!$user){
             return response()->json([

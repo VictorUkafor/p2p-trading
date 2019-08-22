@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Mode\Bank;
+use App\Model\Bank;
 use Closure;
 use Validator;
 

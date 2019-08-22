@@ -7,6 +7,7 @@ use App\Model\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use therealsmat\Ebulksms\EbulkSMS;
+use App\Notifications\sendOTP;
 
 class AccountController extends Controller{
 
@@ -67,7 +68,7 @@ class AccountController extends Controller{
         }
         
         return response()->json([
-            'errorMessage' => 'Internal server error',
+            'errorMessage' => 'Internal server error333',
         ], 500); 
         
     }
@@ -135,7 +136,7 @@ class AccountController extends Controller{
 
 
     /**
-     * @SWG\Post(
+     * @SWG\Get(
      *     path="/api/v1/bvn/otp-verification",
      *     tags={"BVN Verification"},
      *     summary="Validates OTP",
@@ -159,28 +160,28 @@ class AccountController extends Controller{
 
         if(!$user->bvn){
             return response()->json([
-                'errorMessage' => 'Unauthorized action'
+                'errorMessage' => 'Unauthorized actionii'
             ], 401);
         }
-
-        try{
             
+        if($sms->getBalance() > 5){
             $sms->fromSender('P2P TRADING')
             ->composeMessage($user->bvn->otp_code." is your BVN verification code")
             ->addRecipients($user->phone)->send();
-            
-            return response()->json([
-            'successMessage' => 'A verification code has been code sent to your phone',
-            'otp_code' => $user->bvn->otp_code
-           ]   , 200); 
-
-        } catch(Exception $e) {
-
-            return response()->json([
-                'errorMessage' => $e->getMessage(),
-            ]   , 500); 
-
+        } else {
+            $user->notify(new SendOTP($user->bvn->otp_code));   
         }
+        
+        
+        if($user->bvn->otp_code){
+            return response()->json([
+                'successMessage' => 'A verification code has been code sent to your phone',
+            ], 200); 
+        }
+        
+        return response()->json([
+            'errorMessage' => 'Internal server error',
+        ], 500); 
         
     }
 

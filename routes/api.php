@@ -75,6 +75,18 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
         });
 
 
+        // user profile
+        Route::prefix('profile')->group(function () {
+                
+            // view profile
+            Route::get('/', 'UserController@profile');   
+
+            // update profile
+            Route::put('/', 'UserController@update')->middleware('validateDate');   
+
+        });
+
+
         // routes for fake bank accounts
         Route::prefix('banks')->group(function () {
 
@@ -95,18 +107,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
         });
         
-        
-        // user profile
-        Route::prefix('profile')->group(function () {
-                
-            // view profile
-            Route::get('/', 'UserController@profile');   
-
-            // update profile
-            Route::put('/', 'UserController@update')->middleware('validateDate');   
-
-        });
-
 
         // bvn routes
         Route::prefix('bvn')->group(function () {
@@ -120,7 +120,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             ->middleware('validateBVN');         
             
             // route for sending OTP
-            Route::post('/send-otp', 'AccountController@sendOTP');        
+            Route::get('/send-otp', 'AccountController@sendOTP');        
             
             // route for verifing OTP
             Route::post('/verify-otp', 'AccountController@OTPVerification')
