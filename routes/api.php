@@ -128,31 +128,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
         });           
 
-
-        // only for bvn verified accounts
-        Route::middleware('verify')->group(function () {
-            
-
-            // routes for bank accounts
-            Route::prefix('bank-accounts')->group(function () {            
-                
-                // route for viewing all bank accounts
-                Route::get('/', 'AccountController@accounts'); 
-                
-                // route for adding bank account
-                Route::post('/', 'AccountController@addAccount')
-                ->middleware('validateAccount');             
-            
-                // route for viewing a single bank accounts
-                Route::get('/{accountId}', 'AccountController@account')
-                ->middleware('findAccount'); 
-
-                // route for updating bank account
-                Route::put('/{accountId}', 'AccountController@updateAccount')
-                ->middleware('findAccount'); 
-
-            });
-            
             
             // routes for notifications
             Route::prefix('notifications')->group(function () {
@@ -189,6 +164,31 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
 
             });
             
+
+        // only for bvn verified accounts
+        Route::middleware('verify')->group(function () {
+            
+
+            // routes for bank accounts
+            Route::prefix('bank-accounts')->group(function () {            
+                
+                // route for viewing all bank accounts
+                Route::get('/', 'AccountController@accounts'); 
+                
+                // route for adding bank account
+                Route::post('/', 'AccountController@addAccount')
+                ->middleware('validateAccount');             
+            
+                // route for viewing a single bank accounts
+                Route::get('/{accountId}', 'AccountController@account')
+                ->middleware('findAccount'); 
+
+                // route for updating bank account
+                Route::put('/{accountId}', 'AccountController@updateAccount')
+                ->middleware('findAccount'); 
+
+            });
+      
             
             // routes for wallet
             Route::prefix('wallet')->group(function () {
@@ -226,7 +226,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
                     // view a trade ad
                     Route::get('/', 'AdController@ad');
 
-                    // engage an add
+                    // engage an ad
                     Route::post('/engage', 'TransactionController@engageAd')
                     ->middleware('validateEngage');
 
@@ -275,8 +275,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
                         Route::post('/approve/{clientId}', 'TransactionController@approveTrade');
 
                         // decline an add
-                        Route::post('/decline/{clientId}', 'TransactionController@declineTrade')
-                        ->middleware('validateCard');  
+                        Route::post('/decline/{clientId}', 'TransactionController@declineTrade');
+                        //->middleware('validateCard');  
 
                         // confirm deposit of coin by the buyer
                         Route::post('/confirm-coin/{clientId}', 'SellerClientController@confirmDeposit')
@@ -346,14 +346,14 @@ Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
             
             });
             
-            
-            // route for mailing p2p trading
-            Route::post('/mail-us', 'MailController@create')
-            ->middleware('validateMail');
         
         });
-    
-    
+        
+        
+        // route for mailing p2p trading
+        Route::post('/mail-us', 'MailController@create')
+        ->middleware('validateMail');
+        
     });
 
 

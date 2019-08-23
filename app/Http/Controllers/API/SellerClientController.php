@@ -245,7 +245,7 @@ class SellerClientController extends Controller {
             }
 
             return response()->json([
-                'successMessage' => 'Payment refund successfully',
+                'successMessage' => 'Wallet refund successfully',
             ], 201); 
         }
 

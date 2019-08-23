@@ -12,6 +12,7 @@ use App\Notifications\AccountActivate;
 use Illuminate\Support\Facades\Hash;
 use therealsmat\Ebulksms\EbulkSMS;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use App\Notifications\sendOTP;
 
 
 class UserController extends Controller {
@@ -161,17 +162,27 @@ class UserController extends Controller {
             $user->first_name = strtolower($request->first_name);
             $user->last_name = strtolower($request->last_name);
             $user->date_of_birth = $request->date_of_birth;
-            $user->two_fa = 'unset';
             $user->password = Hash::make($request->password);
             
 
             if($user->save()){
                 $user->notify(new AccountActivate($user));
                 
-                return response()->json([
-                    'successMessage' => 
-                    'Your account has been activated successfully. Please login',
-                ], 201);
+                $credentials = [
+                    'email' => $user->email, 
+                    'password' => $request->password, 
+                    'active' => 1
+                ];
+                
+                $token = JWTAuth::attempt($credentials);
+                
+                if ($token) {
+                    return response()->json([
+                        'two_fa' => null,
+                        'token' => $token,
+                    ], 201);
+                }
+
             }
 
             return response()->json([
@@ -181,21 +192,25 @@ class UserController extends Controller {
     }
 
 
-    static function twoFactorWithSMS($user, $sms){
+    static function twoFactorWithSMS($user, $sms, $token){
         $otp = mt_rand(100000, 666666);
-
         $user->sms2fa_otp = $otp;
 
-        $sms->fromSender('P2P TRADING')
-        ->composeMessage($otp." is your login code")
-        ->addRecipients($user->phone)->send();
+        if($sms->getBalance() > 5){
+            $sms->fromSender('P2P TRADING')
+            ->composeMessage($otp." is your login code")
+            ->addRecipients($user->phone)->send();
+        } else {
+            $title = 'Two  Factor login';
+            $user->notify(new SendOTP($otp, $title));   
+        }            
 
         
         if($user->save()){
             return response()->json([
-                'successMessage' => 'An sms has been sent to your phone',
-                'otp' => $otp,
-            ], 200);   
+                'two_fa' => 'sms',
+                'token' => $token,
+            ], 200);
         }
 
         return response()->json([
@@ -204,7 +219,7 @@ class UserController extends Controller {
     }
 
 
-    static function twoFactorWithGoogle($user){
+    static function twoFactorWithGoogle($user, $token){
         
         $google2fa = new Google2FA();
         
@@ -216,6 +231,8 @@ class UserController extends Controller {
         
         if($google2fa_qr){
             return response()->json([
+                'two_fa' => 'google',
+                'token' => $token,
                 'qrCode' => $google2fa_qr,
                 'successMessage' => 'Scan the QrCode with Google Authenticator to grab the OTP', 
                 'instruction' => 'copy the qrcode and paste it in a browser'
@@ -276,38 +293,53 @@ class UserController extends Controller {
         ];
         
         $token = JWTAuth::attempt($credentials);
+        
+        if (!$user || !$token) {
+            return response()->json([
+                'errorMessage' => 'Invalid email or password'
+            ], 401);
+        } 
+
+        if($user->two_fa === 'google'){
+            $this->twoFactorWithGoogle($user, $token);
+        } 
+        
+        if($user->two_fa === 'sms'){
+            //$this->twoFactorWithSMS($user, $sms, $token);
+
+            $otp = mt_rand(100000, 666666);
+            $user->sms2fa_otp = $otp;
     
-        try {
-    
-            if (!$user || !$token) {
-                return response()->json([
-                    'errorMessage' => 'Invalid email or password'
-                ], 401);
-            } 
+            if($sms->getBalance() > 5){
+                $sms->fromSender('P2P TRADING')
+                ->composeMessage($otp." is your login code")
+                ->addRecipients($user->phone)->send();
+            } else {
+                $title = 'Two  Factor login';
+                $user->notify(new SendOTP($otp, $title));   
+            }            
             
-    
-        } catch (JWTException $e) {
+            if($user->save()){
+                return response()->json([
+                    'two_fa' => 'sms',
+                    'token' => $token,
+                ], 200);
+            }
     
             return response()->json([
                 'errorMessage' => 'Internal server error'
             ], 500);
-        }
-    
-        $auth = ['token' => $token, 'email' => $user->email,];
+
+        } 
         
-        if($user->two_fa === 'google'){
-            session(['auth' => $auth]);
-            return $this->twoFactorWithGoogle($user);
+        if(!$user->two_fa) {
+            return response()->json([
+                'two_fa' => null,
+                'token' => $token,
+            ], 200);
         }
 
-        if($user->two_fa === 'sms'){
-            session(['auth' => $auth]);
-            return $this->twoFactorWithSMS($user, $sms);
-        }
 
-        return response()->json([
-            'token' => $token,
-        ], 200);
     
     }
     
@@ -342,19 +374,10 @@ class UserController extends Controller {
 
 
     public function loginWithSMS(Request $request){
-        $auth = session('auth');
 
-        if(!$auth){
-            return response()->json([
-                'errorMessage' => 'Please login',
-                'auth'=> session('auth')
-            ], 401);
-        }
+        $user = User::where('sms2fa_otp', $request->otp)->first();
 
-
-        $user = User::where('email', $auth['email'])->first();
-
-        if(!$user || $user->sms2fa_otp != $request->otp){
+        if(!$user){
             return response()->json([
                 'errorMessage' => 'Invalid OTP',
             ], 400);
@@ -363,9 +386,8 @@ class UserController extends Controller {
         $user->sms2fa_otp = null;
 
         if($user->save()){
-            Session::forget('auth');
             return response()->json([
-                'token' => $auth['token'],
+                'auth' => true
             ], 200);
         }
 
@@ -454,6 +476,28 @@ class UserController extends Controller {
 
         $user = $request->user;
         $user->bvn = $user->bvn;
+        $user->bankAccounts = $user->bankAccounts;
+        $user->notifications = $user->notifications;
+        $user->mockAccounts = $user->banks;
+        $user->wallet = $user->wallet;
+        $user->clients = $user->clients;
+        $user->ads = $user->ads;
+
+        foreach($user->ads as $ad){
+            $ad->clients = $ad->clients;
+            foreach($ad->clients as $client){
+                $client->user = $client->user;
+                $client->transaction = $client->transaction;
+            }
+    
+        }
+
+        foreach($user->clients as $client){
+            $client->ad = $client->ad;
+            $client->ad->creator = $client->ad->creator;
+            $client->transaction = $client->transaction; 
+        }
+
         
         if(!$user){
             return response()->json([

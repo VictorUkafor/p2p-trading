@@ -44,7 +44,7 @@ php artisan serve
 
 ## Hosted app
 
-The hosted app is deployed to https://p2p-trading.herokuapp.com/doc
+The hosted app is deployed to https://p2p-trading.herokuapp.com/api/documentation
 
 
 ## Author

@@ -17,7 +17,7 @@ class ValidateDate
     public function handle($request, Closure $next)
     {
         $validator = Validator::make($request->all(), [
-            'date_of_birth' => 'date',
+            'date_of_birth' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {

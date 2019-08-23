@@ -169,7 +169,8 @@ class AccountController extends Controller{
             ->composeMessage($user->bvn->otp_code." is your BVN verification code")
             ->addRecipients($user->phone)->send();
         } else {
-            $user->notify(new SendOTP($user->bvn->otp_code));   
+            $title = 'BVN Verification';
+            $user->notify(new SendOTP($user->bvn->otp_code, $title));   
         }
         
         
@@ -231,7 +232,7 @@ class AccountController extends Controller{
 
             return response()->json([
                 'errorMessage' => 'Internal server error',
-            ]   , 500); 
+            ], 500); 
 
         }
         
@@ -357,12 +358,12 @@ class AccountController extends Controller{
             return response()->json([
                 'successMessage' => 'Your account has been updated successfully',
                 'account' => $account
-            ]   , 201);
+            ], 201);
         }
         
         return response()->json([
             'errorMessage' => 'Internal server error',
-        ]   , 500); 
+        ], 500); 
 
     }
 

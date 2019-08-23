@@ -34,9 +34,9 @@ class WalletController extends Controller
         if(!$wallet){
             $wallet = new Wallet;
             $wallet->user_id = $request->user->id;
-            $wallet->BTC = '0.00000';
-            $wallet->LTC = '0.00000';
-            $wallet->ETH = '0.00000';
+            $wallet->BTC = 5;
+            $wallet->LTC = 5;
+            $wallet->ETH = 5;
             $wallet->save();
         }
 

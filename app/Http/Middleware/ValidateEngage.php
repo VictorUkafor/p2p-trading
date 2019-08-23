@@ -23,7 +23,6 @@ class ValidateEngage
             ], 401);
         }
 
-
         if($request->amount_in_cash < ($request->ad->min * $request->ad->price)){
             return response()->json([
                 'errorMessage' => 'Transaction lower than Min',

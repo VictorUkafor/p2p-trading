@@ -53,7 +53,6 @@ class AdminController extends Controller {
         $admin->last_name = 'admin';
         $admin->date_of_birth = '1999-01-01';
         $admin->email = $email;
-        $admin->two_fa = 'unset';
         $admin->password = Hash::make($password);
     
         if($admin->save()){

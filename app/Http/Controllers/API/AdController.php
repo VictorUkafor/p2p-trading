@@ -179,6 +179,7 @@ class AdController extends Controller {
         $buyAd->min = $request->min;
         $buyAd->max = $request->max;
         $buyAd->deadline = $request->deadline;
+        $buyAd->bank_account_id = $request->account->id;
 
         $request->account->balance -= $request->max * $request->price;
 
@@ -217,6 +218,10 @@ class AdController extends Controller {
     public function allAds() { 
 
         $ads = Ad::where('state', 'public')->get();
+
+        foreach($ads as $ad){
+            $ad->creator = $ad->creator;
+        };
 
         if(!count($ads)){
             return response()->json([

@@ -57,6 +57,12 @@ class BuyerClientController extends Controller{
 
         $transaction = $client->transaction;
 
+        if($transaction->amount_in_cash > $request->account->balance){
+            return response()->json([
+                'successMessage' => 'Insufficient account balance',
+            ], 201);
+        }
+
         $request->account->balance -= $transaction->amount_in_cash;
 
         $client->transaction->status = 'paid';
@@ -171,9 +177,9 @@ class BuyerClientController extends Controller{
 
         $transaction = $client->transaction;
 
-        $account = BankAccount::find($ad->bank_account_id);
+        $bank = Bank::find($ad->bank_account_id);
 
-        $bank = Bank::where('account_number', $account->account_number)->first();
+        //$bank = Bank::where('account_number', $account->account_number)->first();
 
         $bank->balance += $transaction->amount_in_cash;
 

@@ -26,4 +26,8 @@ class BankAccount extends Model
         return $this->belongsToMany('App\Model\SellCrypto', 'bank_account_id');
     }
 
+
+
+    
+
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use therealsmat\Ebulksms\EbulkSMS;
 use PragmaRX\Google2FAQRCode\Google2FA;
+use App\Notifications\sendOTP;
 
 class SettingController extends Controller
 {
@@ -75,6 +76,7 @@ class SettingController extends Controller
             if($user->save()){
                 return response()->json([
                     'successMessage' => 'Two factor authentication set with Google',
+                    'set' => true,
                 ], 200);  
             }
 
@@ -132,12 +134,13 @@ class SettingController extends Controller
         
         $user = $request->user;
 
-        if($user->two_fa !== 'unset'){
+        if($user->sms2fa){
             $user->two_fa = 'sms';
 
             if($user->save()){
                 return response()->json([
                     'successMessage' => 'Two factor authentication set with SMS',
+                    'set' => true,
                 ], 200);  
             }
 
@@ -149,16 +152,20 @@ class SettingController extends Controller
         
         $otp = mt_rand(100000, 999999);
         $user->sms2fa_otp = $otp;
-            
-        $sms->fromSender('P2P TRADING')
-        ->composeMessage($otp." is your login OTP")
-        ->addRecipients($user->phone)->send();
-        
+
+        if($sms->getBalance() > 5){
+            $sms->fromSender('P2P TRADING')
+            ->composeMessage($otp." is your login OTP")
+            ->addRecipients($user->phone)->send();
+        } else {
+            $title = 'Two-Factor Authentication setup';
+            $user->notify(new SendOTP($otp, $title));   
+        }
+                    
 
         if($user->save()){
             return response()->json([
                 'successMessage' => 'Please enter the code sent to your phone',
-                'otp' => $otp
             ], 200);  
         }
 
@@ -208,6 +215,7 @@ class SettingController extends Controller
         }
 
         $user->two_fa = 'sms';
+        $user->sms2fa = true;
         $user->sms2fa_otp = null;
 
         if($user->save()){

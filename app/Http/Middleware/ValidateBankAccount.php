@@ -24,7 +24,7 @@ class ValidateBankAccount
         }
 
         $validator = Validator::make($request->all(), [
-            'account_number' => 'required|numeric|digits:10|exists:banks,account_number',
+            'account_number' => 'required|numeric|exists:banks,account_number',
             'internet_banking' => 'required'
         ]);
 

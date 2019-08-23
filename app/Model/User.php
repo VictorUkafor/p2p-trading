@@ -30,6 +30,7 @@ class User extends Authenticatable implements JWTSubject
         'activation_token',
         'google2fa_secret',
         'sms2fa_otp',
+        'sms2fa',
         'two_fa',
     ];
 

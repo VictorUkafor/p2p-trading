@@ -16,9 +16,10 @@ class SendOTP extends Notification
      *
      * @return void
      */
-    public function __construct($otp)
+    public function __construct($otp, $title)
     {
         $this->otp = $otp;
+        $this->title = $title;
     }
 
     /**
@@ -41,7 +42,7 @@ class SendOTP extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-        ->subject('OTP for BVN Verification')
+        ->subject('OTP for '.$this->title)
         ->greeting('Hello There')
         ->line('You are receiving this email, 
         because we are unable to send you the OTP via SMS. 

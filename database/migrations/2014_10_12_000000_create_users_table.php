@@ -23,6 +23,10 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->boolean('active')->default(false);
             $table->string('activation_token');
+            $table->boolean('sms2fa')->default(false);
+            $table->text('two_fa')->nullable();
+            $table->text('google2fa_secret')->nullable();
+            $table->integer('sms2fa_otp')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -21,7 +21,7 @@ class ValidateMailUs
             'email' => 'required|email',
             'subject' => 'required',
             'message' => 'required',
-            'file' => 'image',
+            'file' => 'nullable|image',
         ]);
 
         if ($validator->fails()) {
