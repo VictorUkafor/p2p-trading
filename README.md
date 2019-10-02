@@ -8,7 +8,7 @@ P2P-Trading is a platform where can buy and sell cryptocurrency.
 1. To install and run the application locally, clone the project by running
 
 ```bash
-git clone git@github.com:davmixcool/p2p-trading.git
+git clone git@github.com:VictorUkafor/p2p-trading.git
 ```
 2. cd into the root of the cloned project and run 
 
